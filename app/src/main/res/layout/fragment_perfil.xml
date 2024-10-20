@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Campo para mostrar/editar el nombre -->
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre" />
+
+    <!-- Campo para mostrar/editar la edad -->
+    <EditText
+        android:id="@+id/editTextEdad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edad"
+        android:inputType="number" />
+
+    <!-- Campo para mostrar/editar el club -->
+    <EditText
+        android:id="@+id/editTextClub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Club" />
+
+    <!-- Campo para mostrar/editar los años nadando -->
+    <EditText
+        android:id="@+id/editTextAnosNadando"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Años Nadando"
+        android:inputType="number" />
+
+    <!-- Campo para mostrar/editar el estilo favorito -->
+    <EditText
+        android:id="@+id/editTextEstiloFavorito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Estilo Favorito" />
+
+    <!-- Campo para mostrar/editar la prueba favorita -->
+    <EditText
+        android:id="@+id/editTextPruebaFavorita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Prueba Favorita" />
+
+    <!-- Botón para guardar cambios en el perfil -->
+    <Button
+        android:id="@+id/guardarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar Cambios" />
+
+    <!-- Botón para cerrar sesión -->
+    <Button
+        android:id="@+id/cerrarSesionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"
+        android:layout_marginTop="20dp" />
+</LinearLayout>

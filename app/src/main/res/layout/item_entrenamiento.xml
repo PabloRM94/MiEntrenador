@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="8dp">
+
+    <!-- Nombre del entrenamiento -->
+    <TextView
+        android:id="@+id/textViewNombreEntrenamiento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Entrenamiento"
+        android:textStyle="bold" />
+
+    <!-- Número de tareas -->
+    <TextView
+        android:id="@+id/textViewNumeroTareas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 tareas" />
+
+    <!-- Metros totales -->
+    <TextView
+        android:id="@+id/textViewMetrosTotales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0 metros" />
+
+    <!-- Botón editar -->
+    <ImageButton
+        android:id="@+id/buttonEditarEntrenamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_edit"
+        android:background="?android:attr/selectableItemBackgroundBorderless" />
+
+    <!-- Botón eliminar -->
+    <ImageButton
+        android:id="@+id/buttonEliminarEntrenamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="?android:attr/selectableItemBackgroundBorderless" />
+</LinearLayout>

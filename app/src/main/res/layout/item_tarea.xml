@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="8dp">
+
+    <!-- Objetivo de la tarea (texto más pequeño) -->
+    <TextView
+        android:id="@+id/textViewObjetivo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Objetivo"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+
+    <!-- Descripción de la tarea  -->
+    <TextView
+        android:id="@+id/textViewDescripcion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_weight="2"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="none"
+        android:maxLines="100"
+        android:scrollHorizontally="false" />
+
+    <!-- Metros de la tarea -->
+    <TextView
+        android:id="@+id/textViewMetros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Metros"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="end"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Botón para Editar  -->
+    <ImageButton
+        android:id="@+id/buttonEditar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Editar tarea"
+        android:src="@android:drawable/ic_menu_edit" />
+
+    <!-- Botón para Eliminar -->
+    <ImageButton
+        android:id="@+id/buttonEliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Eliminar tarea"
+        android:src="@android:drawable/ic_menu_delete" />
+</LinearLayout>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Campo de texto para el nombre del usuario -->
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Nombre" />
+
+    <!-- Campo de texto para la edad del usuario -->
+    <EditText
+        android:id="@+id/editTextEdad"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Edad"
+        android:inputType="number" />
+
+    <!-- Campo de texto para el club al que pertenece -->
+    <EditText
+
+        android:id="@+id/editTextClub"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Club" />
+
+    <!-- Campo de texto para los años nadando -->
+    <EditText
+        android:id="@+id/editTextAnosNadando"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Años Nadando"
+        android:inputType="number" />
+
+    <!-- Campo de texto para el estilo favorito -->
+    <EditText
+        android:id="@+id/editTextEstiloFavorito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Estilo Favorito" />
+
+    <!-- Campo de texto para la prueba favorita -->
+    <EditText
+        android:id="@+id/editTextPruebaFavorita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Prueba Favorita" />
+
+    <!-- Campo de texto para la contraseña -->
+    <EditText
+        android:id="@+id/editTextContrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:inputType="textPassword" />
+
+    <!-- CheckBox para mostrar/ocultar la contraseña -->
+    <CheckBox
+        android:id="@+id/mostrarContrasenaCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostrar contraseña" />
+
+</LinearLayout>

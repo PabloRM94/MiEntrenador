@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título del entrenamiento -->
+    <EditText
+        android:id="@+id/editTextNumeroEntrenamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Nombre Entrenamiento" />
+
+    <!-- RecyclerView para las tareas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTareasEntrenamiento"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="16dp" />
+
+    <!-- Botón para elegir agregar tarea nueva o existente -->
+    <Button
+        android:id="@+id/buttonSeleccionarAgregarTarea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar Tarea Nueva o Existente" />
+
+    <!-- Mostrar la suma total de metros -->
+    <TextView
+        android:id="@+id/textViewSumaTotalMetros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suma total metros: 0" />
+
+    <!-- Botón para guardar el entrenamiento -->
+    <Button
+        android:id="@+id/buttonGuardarEntrenamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar Entrenamiento"
+        android:layout_gravity="center" />
+
+    <!-- RecyclerView para los entrenamientos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewEntrenamientos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

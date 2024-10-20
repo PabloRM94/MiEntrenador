@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "902596608204",
+    "project_id": "mi-entrenador-9f794",
+    "storage_bucket": "mi-entrenador-9f794.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902596608204:android:41557268cc02afbe604269",
+        "android_client_info": {
+          "package_name": "com.ilerna.mientrenador"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4Q3bYYO0Zy2w3Il61OYma74_YawJCxq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

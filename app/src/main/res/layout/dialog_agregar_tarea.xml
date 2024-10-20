@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextObjetivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Objetivo" />
+
+    <EditText
+        android:id="@+id/editTextDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripción" />
+
+    <EditText
+        android:id="@+id/editTextMetros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Metros"
+        android:inputType="number" />
+
+    <Switch
+        android:id="@+id/switchDesarrollo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Desarrollo?" />
+
+    <Switch
+        android:id="@+id/switchCorta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Corta?" />
+</LinearLayout>
