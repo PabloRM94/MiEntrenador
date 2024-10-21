@@ -6,9 +6,9 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.*
+import androidx.appcompat.widget.SearchView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Tarea
 
@@ -19,6 +19,8 @@ class TareasFragment : Fragment() {
     private lateinit var agregarTareaButton: Button
     private lateinit var editarTareaButton: Button
     private lateinit var tareasAdapter: TareasAdapter
+    private lateinit var searchViewTareas: SearchView
+    private var todasLasTareas: List<Tarea> = emptyList()  // Lista para almacenar todas las tareas
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,14 +35,15 @@ class TareasFragment : Fragment() {
         tareasList = view.findViewById(R.id.recyclerViewTareas)
         agregarTareaButton = view.findViewById(R.id.buttonAgregarTarea)
         editarTareaButton = view.findViewById(R.id.buttonEditarTarea)
+        searchViewTareas = view.findViewById(R.id.searchViewTareas)
 
         // Configurar RecyclerView
         tareasList.layoutManager = LinearLayoutManager(requireContext())
 
         // Inicializar el adaptador con los métodos para editar y eliminar tareas
         tareasAdapter = TareasAdapter(emptyList(),
-            { tarea -> editarTarea(tarea) }, // Función para editar
-            { tarea -> eliminarTarea(tarea) } // Función para eliminar
+            { tarea -> editarTarea(tarea) },  // Función para editar
+            { tarea -> eliminarTarea(tarea) }  // Función para eliminar
         )
         tareasList.adapter = tareasAdapter
 
@@ -57,23 +60,60 @@ class TareasFragment : Fragment() {
             mostrarDialogoEditarTarea()
         }
 
+        // Configurar el SearchView para buscar en tiempo real
+        searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    buscarTareas(it)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    // Si el término está vacío, restauramos todas las tareas
+                    tareasAdapter.actualizarTareas(todasLasTareas)
+                } else {
+                    buscarTareas(newText)
+                }
+                return false
+            }
+        })
+
         return view
     }
 
-    // Función para cargar todas las tareas desde Firestore
+    // Función para buscar las tareas por el término de búsqueda (insensible a mayúsculas/minúsculas)
+    private fun buscarTareas(termino: String) {
+        val terminoLowerCase = termino.lowercase()
+
+        // Filtrar las tareas en base al término de búsqueda (en campos objetivo, descripcion y metros)
+        val tareasFiltradas = todasLasTareas.filter { tarea ->
+            tarea.objetivo.lowercase().contains(terminoLowerCase) ||  // Comparar objetivo ignorando mayúsculas
+                    tarea.descripcion.lowercase().contains(terminoLowerCase) ||  // Comparar descripcion ignorando mayúsculas
+                    tarea.metros.toString().contains(termino)  // Para el campo metros, buscamos la coincidencia exacta del número
+        }
+
+        // Actualizar el adaptador con las tareas filtradas
+        tareasAdapter.actualizarTareas(tareasFiltradas)
+    }
+
+    // Función para cargar todas las tareas desde Firestore y almacenarlas en `todasLasTareas`
     private fun cargarTareas() {
         firestore.collection("tareas").get()
             .addOnSuccessListener { result ->
-                val tareas = result.mapNotNull { document ->
+                // Guardamos todas las tareas cargadas
+                todasLasTareas = result.mapNotNull { document ->
                     document.toObject(Tarea::class.java).apply { id = document.id }
                 }
-                tareasAdapter.actualizarTareas(tareas)
+
+                // Actualizamos el adaptador para mostrar todas las tareas
+                tareasAdapter.actualizarTareas(todasLasTareas)
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(requireContext(), "Error al cargar las tareas: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
     // Mostrar un diálogo para agregar una nueva tarea
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     fun mostrarDialogoAgregarTarea() {

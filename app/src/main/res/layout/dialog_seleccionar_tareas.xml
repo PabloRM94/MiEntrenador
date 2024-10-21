@@ -6,12 +6,29 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchViewTareas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="46dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Buscar tarea..."
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewTareasEntrenamiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTareasEntrenamiento"
         android:layout_width="397dp"
         android:layout_height="193dp"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/searchViewTareas" />
+</androidx.constraintlayout.widget.ConstraintLayout>
