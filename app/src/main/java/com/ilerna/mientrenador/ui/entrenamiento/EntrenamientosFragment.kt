@@ -1,6 +1,7 @@
 package com.ilerna.mientrenador.ui.entrenamiento
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -39,7 +40,7 @@ class EntrenamientosFragment : Fragment() {
         cargarEntrenamientos()
 
         view.findViewById<Button>(R.id.buttonAgregarTarea).setOnClickListener {
-            mostrarDialogoAgregarTarea()
+            mostrarOpcionesTareas()
         }
 
         view.findViewById<Button>(R.id.buttonGuardarEntrenamiento).setOnClickListener {
@@ -67,6 +68,49 @@ class EntrenamientosFragment : Fragment() {
             tareasAdapter.actualizarTareas(tareasList)
             actualizarMetrosTotales(requireContext())
         }
+    }
+    // Mostrar las opciones: seleccionar tareas existentes o agregar nuevas tareas
+    private fun mostrarOpcionesTareas() {
+        val opciones = arrayOf("Seleccionar tareas existentes", "Crear nueva tarea")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Opciones de tareas")
+            .setItems(opciones) { _, which ->
+                when (which) {
+                    0 -> mostrarDialogoSeleccionarTareas()  // Seleccionar tareas de Firestore
+                    1 -> mostrarDialogoAgregarTarea()       // Crear una nueva tarea
+                }
+            }
+            .show()
+    }
+    @SuppressLint("MissingInflatedId")
+    private fun mostrarDialogoSeleccionarTareas() {
+        val builder = AlertDialog.Builder(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_seleccionar_tareas, null)
+        builder.setView(dialogView)
+
+        val recyclerViewTareasExistentes = dialogView.findViewById<RecyclerView>(R.id.recyclerViewTareasEntrenamiento)
+        recyclerViewTareasExistentes.layoutManager = LinearLayoutManager(requireContext())
+
+        // Adaptador para mostrar las tareas existentes
+        val tareasExistentesAdapter = TareasEntrenamientoAdapter(mutableListOf(), ::editarTarea, ::eliminarTarea, ::actualizarMetrosTotales, requireContext())
+        recyclerViewTareasExistentes.adapter = tareasExistentesAdapter
+
+        // Cargar las tareas existentes desde Firestore
+        firestore.collection("tareas").get().addOnSuccessListener { result ->
+            val tareasExistentes = result.toObjects(Tarea::class.java)
+            tareasExistentesAdapter.actualizarTareas(tareasExistentes.toMutableList())
+        }
+
+        builder.setPositiveButton("Añadir") { _, _ ->
+            // Añadir las tareas seleccionadas al entrenamiento actual
+            val tareasSeleccionadas = tareasExistentesAdapter.getTareasSeleccionadas()
+            tareasList.addAll(tareasSeleccionadas)
+            tareasAdapter.actualizarTareas(tareasList)
+            actualizarMetrosTotales(requireContext())
+        }
+
+        builder.setNegativeButton("Cancelar", null)
+        builder.create().show()
     }
 
     // Mostrar un diálogo reutilizable para agregar/editar una tarea

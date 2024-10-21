@@ -21,7 +21,7 @@
 
     <!-- Botón para elegir agregar tarea nueva o existente -->
     <Button
-        android:id="@+id/buttonSeleccionarAgregarTarea"
+        android:id="@+id/buttonAgregarTarea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Agregar Tarea Nueva o Existente" />
