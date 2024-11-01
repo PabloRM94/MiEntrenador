@@ -26,8 +26,6 @@ class TareasEntrenamientoAdapter(
         return TareaViewHolder(view)
     }
 
-
-
     // Actualizar la lista de tareas en el adaptador
     fun actualizarTareas(nuevaLista: MutableList<Tarea>) {
         tareas = nuevaLista
@@ -61,23 +59,6 @@ class TareasEntrenamientoAdapter(
     // Devuelve la lista de tareas seleccionadas
     fun getTareasSeleccionadas(): List<Tarea> {
         return tareasSeleccionadas.toList()
-    }
-    // Eliminar tarea con confirmación
-    fun eliminarTarea(tarea: Tarea) {
-        val builder = AlertDialog.Builder(contexto)
-        builder.setTitle("Eliminar Tarea")
-        builder.setMessage("¿Estás seguro de que deseas eliminar esta tarea?")
-
-        builder.setPositiveButton("Sí") { _, _ ->
-            // Elimina la tarea y actualiza el adaptador
-            tareas.remove(tarea)
-            notifyDataSetChanged()
-            actualizarMetrosTotales(contexto)
-            Toast.makeText(contexto, "Tarea eliminada", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setNegativeButton("No", null)
-        builder.create().show()
     }
 
     fun getTareas(): MutableList<Tarea> {

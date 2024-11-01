@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Campo para editar el nombre del entrenamiento -->
+    <EditText
+        android:id="@+id/editTextNombreEntrenamiento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del entrenamiento"
+        android:inputType="text" />
+
+    <!-- RecyclerView para las tareas del entrenamiento -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTareasEntrenamiento"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
+
+    <!-- Botón para agregar una nueva tarea -->
+    <Button
+        android:id="@+id/buttonAgregarTarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Agregar tarea" />
+
+    <!-- Botón para guardar el entrenamiento -->
+    <Button
+        android:id="@+id/buttonGuardarEntrenamiento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Guardar entrenamiento" />
+</LinearLayout>
