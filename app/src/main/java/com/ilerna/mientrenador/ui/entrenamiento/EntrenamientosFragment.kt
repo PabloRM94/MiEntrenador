@@ -24,6 +24,7 @@ class EntrenamientosFragment : Fragment() {
     private var entrenamientosList: MutableList<Entrenamiento> = mutableListOf()
     private var currentEntrenamiento: Entrenamiento = Entrenamiento()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,7 +53,7 @@ class EntrenamientosFragment : Fragment() {
     private fun setupRecyclerViews(view: View) {
         val recyclerViewTareas = view.findViewById<RecyclerView>(R.id.recyclerViewTareasEntrenamiento)
         recyclerViewTareas.layoutManager = LinearLayoutManager(requireContext())
-        tareasAdapter = TareasEntrenamientoAdapter(tareasList, ::editarTarea, ::eliminarTarea, ::actualizarMetrosTotales, requireContext())
+        tareasAdapter = TareasEntrenamientoAdapter(tareasList, ::editarTarea, ::eliminarTarea)
         recyclerViewTareas.adapter = tareasAdapter
 
         val recyclerViewEntrenamientos = view.findViewById<RecyclerView>(R.id.recyclerViewEntrenamientos)
@@ -92,7 +93,7 @@ class EntrenamientosFragment : Fragment() {
         recyclerViewTareasExistentes.layoutManager = LinearLayoutManager(requireContext())
 
         // Adaptador para mostrar las tareas existentes
-        val tareasExistentesAdapter = TareasEntrenamientoAdapter(mutableListOf(), ::editarTarea, ::eliminarTarea, ::actualizarMetrosTotales, requireContext())
+        val tareasExistentesAdapter = TareasEntrenamientoAdapter(mutableListOf(), ::editarTarea, ::eliminarTarea)
         recyclerViewTareasExistentes.adapter = tareasExistentesAdapter
 
         // Cargar las tareas existentes desde Firestore
@@ -202,58 +203,17 @@ class EntrenamientosFragment : Fragment() {
 
     // Editar un entrenamiento
     private fun editarEntrenamiento(entrenamiento: Entrenamiento) {
-        val builder = AlertDialog.Builder(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_entrenamiento, null)
-        builder.setView(dialogView)
+        // Configurar el entrenamiento actual con el seleccionado
+        currentEntrenamiento = entrenamiento
 
-        val nombreEditText = dialogView.findViewById<EditText>(R.id.editTextNombreEntrenamiento)
-        val recyclerViewTareas = dialogView.findViewById<RecyclerView>(R.id.recyclerViewTareasEntrenamiento)
-        val agregarTareaButton = dialogView.findViewById<Button>(R.id.buttonAgregarTarea)
+        // Establecer el nombre del entrenamiento en el EditText
+        val editTextNombreEntrenamiento = view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)
+        editTextNombreEntrenamiento?.setText(entrenamiento.nombre)
 
-        val tareasMutableList = entrenamiento.tareas.toMutableList()
-
-        val tareasAdapter = TareasEntrenamientoAdapter(tareasMutableList, ::editarTarea, { tarea ->
-            tareasMutableList.remove(tarea)
-            tareasAdapter.actualizarTareas(tareasMutableList)
-            actualizarMetrosTotales(requireContext())
-            entrenamiento.tareas = tareasMutableList.toMutableList()
-        }, ::actualizarMetrosTotales, requireContext())
-
-        nombreEditText.setText(entrenamiento.nombre)
-        recyclerViewTareas.layoutManager = LinearLayoutManager(requireContext())
-        recyclerViewTareas.adapter = tareasAdapter
-
-        agregarTareaButton.setOnClickListener {
-            mostrarDialogoAgregarTareaParaEditar(entrenamiento, tareasAdapter)
-        }
-
-        builder.setPositiveButton("Guardar") { _, _ ->
-            val nuevoNombre = nombreEditText.text.toString().trim()
-            if (nuevoNombre.isNotEmpty()) {
-                entrenamiento.nombre = nuevoNombre
-                entrenamiento.tareas = tareasAdapter.getTareas().toMutableList()
-                entrenamiento.numeroTareas = entrenamiento.tareas.size
-                entrenamiento.metrosTotales = entrenamiento.tareas.sumOf { it.metros }
-
-                val entrenamientoId = entrenamiento.id.takeIf { it.isNotEmpty() } ?: firestore.collection("entrenamientos").document().id
-                entrenamiento.id = entrenamientoId
-
-                firestore.collection("entrenamientos").document(entrenamiento.id)
-                    .set(entrenamiento)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Entrenamiento actualizado", Toast.LENGTH_SHORT).show()
-                        cargarEntrenamientos()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "Error al actualizar el entrenamiento", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(requireContext(), "El nombre del entrenamiento no puede estar vacío", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        builder.setNegativeButton("Cancelar", null)
-        builder.create().show()
+        // Actualizar la lista de tareas en el RecyclerView de tareas
+        tareasList = entrenamiento.tareas.toMutableList()
+        tareasAdapter.actualizarTareas(tareasList)
+        actualizarMetrosTotales(requireContext())
     }
 
     // Mostrar diálogo para agregar tareas durante la edición

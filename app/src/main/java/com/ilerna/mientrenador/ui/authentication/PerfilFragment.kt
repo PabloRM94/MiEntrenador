@@ -151,12 +151,6 @@ class PerfilFragment : Fragment() {
     private fun cerrarSesion() {
         mAuth.signOut()
 
-        // Registrar el evento de cierre de sesión en Firebase Analytics
-        val bundle = Bundle().apply {
-            putString(FirebaseAnalytics.Param.METHOD, "sign_out")
-        }
-
-
         // Mostrar un mensaje de despedida y redirigir al inicio de sesión
         AlertDialog.Builder(requireContext())
             .setTitle("Adiós")

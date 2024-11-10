@@ -15,8 +15,7 @@ class TareasEntrenamientoAdapter(
     private var tareas: MutableList<Tarea>,
     private val onEditClick: (Tarea) -> Unit,
     private val onDeleteClick: (Tarea) -> Unit,
-    private val actualizarMetrosTotales: (Context) -> Unit,
-    private val contexto: Context
+
 ) : RecyclerView.Adapter<TareasEntrenamientoAdapter.TareaViewHolder>() {
     // Mantiene un conjunto de tareas seleccionadas
     private val tareasSeleccionadas: MutableSet<Tarea> = mutableSetOf()
@@ -61,23 +60,6 @@ class TareasEntrenamientoAdapter(
     // Devuelve la lista de tareas seleccionadas
     fun getTareasSeleccionadas(): List<Tarea> {
         return tareasSeleccionadas.toList()
-    }
-    // Eliminar tarea con confirmación
-    fun eliminarTarea(tarea: Tarea) {
-        val builder = AlertDialog.Builder(contexto)
-        builder.setTitle("Eliminar Tarea")
-        builder.setMessage("¿Estás seguro de que deseas eliminar esta tarea?")
-
-        builder.setPositiveButton("Sí") { _, _ ->
-            // Elimina la tarea y actualiza el adaptador
-            tareas.remove(tarea)
-            notifyDataSetChanged()
-            actualizarMetrosTotales(contexto)
-            Toast.makeText(contexto, "Tarea eliminada", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setNegativeButton("No", null)
-        builder.create().show()
     }
 
     fun getTareas(): MutableList<Tarea> {
