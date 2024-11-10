@@ -1,8 +1,6 @@
 package com.ilerna.mientrenador
 
 import android.os.Bundle
-import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_entrenamientos
+                R.id.nav_Inicio_sesión, R.id.nav_Tareas, R.id.nav_entrenamientos
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

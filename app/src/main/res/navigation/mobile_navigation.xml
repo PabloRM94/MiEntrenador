@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_Inicio_sesión">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_Inicio_sesión"
         android:name="com.ilerna.mientrenador.ui.authentication.AuthFragment"
-        android:label="@string/menu_home"
+        android:label="Inicio sesión"
         tools:layout="@layout/fragment_auth" >
         <action
             android:id="@+id/action_nav_home_to_nav_perfil"
@@ -20,9 +20,9 @@
         android:label="Perfil"
         tools:layout="@layout/fragment_perfil" />
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_Tareas"
         android:name="com.ilerna.mientrenador.ui.tareas.TareasFragment"
-        android:label="@string/menu_gallery"
+        android:label="Tareas"
         tools:layout="@layout/fragment_tareas" />
 
     <fragment
