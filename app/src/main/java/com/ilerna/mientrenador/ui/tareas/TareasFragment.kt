@@ -17,7 +17,6 @@ class TareasFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var tareasList: RecyclerView
     private lateinit var agregarTareaButton: Button
-    private lateinit var editarTareaButton: Button
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var searchViewTareas: SearchView
     private var todasLasTareas: List<Tarea> = emptyList()  // Lista para almacenar todas las tareas
@@ -34,7 +33,6 @@ class TareasFragment : Fragment() {
         // Vincular elementos del layout
         tareasList = view.findViewById(R.id.recyclerViewTareas)
         agregarTareaButton = view.findViewById(R.id.buttonAgregarTarea)
-        editarTareaButton = view.findViewById(R.id.buttonEditarTarea)
         searchViewTareas = view.findViewById(R.id.searchViewTareas)
 
         // Configurar RecyclerView
@@ -55,10 +53,6 @@ class TareasFragment : Fragment() {
             mostrarDialogoAgregarTarea()
         }
 
-        // Botón para editar/eliminar tareas
-        editarTareaButton.setOnClickListener {
-            mostrarDialogoEditarTarea()
-        }
 
         // Configurar el SearchView para buscar en tiempo real
         searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -170,31 +164,6 @@ class TareasFragment : Fragment() {
             }
     }
 
-    // Mostrar un diálogo para editar o eliminar tareas
-    @SuppressLint("MissingInflatedId")
-    fun mostrarDialogoEditarTarea() {
-        val builder = AlertDialog.Builder(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_tarea, null)
-        builder.setView(dialogView)
-
-        val listaTareasRecyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerViewEditarTareas)
-        listaTareasRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Cargar las tareas y mostrarlas en el diálogo
-        firestore.collection("tareas").get()
-            .addOnSuccessListener { result ->
-                val tareas = result.mapNotNull { document ->
-                    document.toObject(Tarea::class.java).apply { id = document.id }
-                }
-                val adapter = EditarTareasAdapter(tareas, { tarea -> editarTarea(tarea) }, { tarea -> eliminarTarea(tarea) })
-                listaTareasRecyclerView.adapter = adapter
-            }
-
-        builder.setNegativeButton("Cerrar", null)
-
-        val dialog = builder.create()
-        dialog.show()
-    }
     fun editarTarea(tarea: Tarea) {
         val builder = AlertDialog.Builder(requireContext())
         val dialogView = layoutInflater.inflate(R.layout.dialog_agregar_tarea, null)
