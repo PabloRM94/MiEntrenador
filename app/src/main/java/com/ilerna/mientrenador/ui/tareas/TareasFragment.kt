@@ -78,7 +78,7 @@ class TareasFragment : Fragment() {
     }
 
     // Función para buscar las tareas por el término de búsqueda (insensible a mayúsculas/minúsculas)
-    private fun buscarTareas(termino: String) {
+    fun buscarTareas(termino: String) {
         val terminoLowerCase = termino.lowercase()
 
         // Filtrar las tareas en base al término de búsqueda (en campos objetivo, descripcion y metros)
