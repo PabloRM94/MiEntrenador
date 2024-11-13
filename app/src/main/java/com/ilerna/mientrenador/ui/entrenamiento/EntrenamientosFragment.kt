@@ -17,6 +17,7 @@ import com.ilerna.mientrenador.ui.data.Entrenamiento
 import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
 import com.ilerna.mientrenador.utils.TareasUtils
+
 import java.util.UUID
 
 class EntrenamientosFragment : Fragment() {
@@ -205,6 +206,7 @@ class EntrenamientosFragment : Fragment() {
                 tareasList[index] = tareaEditada
                 tareasAdapter.notifyDataSetChanged()
                 actualizarMetrosTotales(requireContext())
+                tareasAdapter.actualizarTarea(tareaEditada)
             }
         }
     }

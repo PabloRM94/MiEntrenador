@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Tarea
 
-
 class TareasEntrenamientoAdapter(
     private var tareas: MutableList<Tarea>,
     private val onEditClick: (Tarea) -> Unit,
     private val onDeleteClick: (Tarea) -> Unit,
-
 ) : RecyclerView.Adapter<TareasEntrenamientoAdapter.TareaViewHolder>() {
+
     // Mantiene un conjunto de tareas seleccionadas
     private val tareasSeleccionadas: MutableSet<Tarea> = mutableSetOf()
 
@@ -29,6 +28,25 @@ class TareasEntrenamientoAdapter(
         tareas = nuevaLista.toMutableList()
         notifyDataSetChanged()
     }
+
+    // Actualizar una tarea específica
+    fun actualizarTarea(tarea: Tarea) {
+        val index = tareas.indexOfFirst { it.id == tarea.id }
+        if (index != -1) {
+            tareas[index] = tarea
+            notifyItemChanged(index)
+        }
+    }
+
+    // Eliminar una tarea específica
+    fun eliminarTarea(tarea: Tarea) {
+        val index = tareas.indexOfFirst { it.id == tarea.id }
+        if (index != -1) {
+            tareas.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
     override fun onBindViewHolder(holder: TareaViewHolder, position: Int) {
         val tarea = tareas[position]
         holder.bind(tarea, onEditClick, onDeleteClick)
@@ -79,5 +97,3 @@ class TareasEntrenamientoAdapter(
         }
     }
 }
-
-
