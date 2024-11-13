@@ -11,9 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.appcompat.widget.SearchView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Entrenamiento
+import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
+import com.ilerna.mientrenador.utils.TareasUtils
+import java.util.UUID
 
 class EntrenamientosFragment : Fragment() {
 
@@ -92,7 +96,7 @@ class EntrenamientosFragment : Fragment() {
         val recyclerViewTareasExistentes = dialogView.findViewById<RecyclerView>(R.id.recyclerViewTareasEntrenamiento)
         recyclerViewTareasExistentes.layoutManager = LinearLayoutManager(requireContext())
 
-        // Adaptador para mostrar las tareas existentes
+        val searchViewTareas = dialogView.findViewById<androidx.appcompat.widget.SearchView>(R.id.searchViewTareas)
         val tareasExistentesAdapter = TareasEntrenamientoAdapter(mutableListOf(), ::editarTarea, ::eliminarTarea)
         recyclerViewTareasExistentes.adapter = tareasExistentesAdapter
 
@@ -100,6 +104,24 @@ class EntrenamientosFragment : Fragment() {
         firestore.collection("tareas").get().addOnSuccessListener { result ->
             val tareasExistentes = result.toObjects(Tarea::class.java)
             tareasExistentesAdapter.actualizarTareas(tareasExistentes.toMutableList())
+
+            // Configurar búsqueda en tiempo real
+            searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        tareasExistentesAdapter.actualizarTareas(TareasUtils.filtrarTareas(tareasExistentes, it))
+                    }
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    tareasExistentesAdapter.actualizarTareas(
+                        if (newText.isNullOrBlank()) tareasExistentes
+                        else TareasUtils.filtrarTareas(tareasExistentes, newText)
+                    )
+                    return false
+                }
+            })
         }
 
         builder.setPositiveButton("Añadir") { _, _ ->
@@ -124,10 +146,22 @@ class EntrenamientosFragment : Fragment() {
         val descripcionEditText = dialogView.findViewById<EditText>(R.id.editTextDescripcion)
         val metrosEditText = dialogView.findViewById<EditText>(R.id.editTextMetros)
 
+        // Checkboxes para los estilos de natación
+        val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
+        val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
+        val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
+        val checkboxMariposa = dialogView.findViewById<CheckBox>(R.id.checkboxMariposa)
+
+        // Si estamos editando una tarea existente, llenar los campos y preseleccionar los estilos
         tarea?.let {
             objetivoEditText.setText(it.objetivo)
             descripcionEditText.setText(it.descripcion)
             metrosEditText.setText(it.metros.toString())
+
+            checkboxCrol.isChecked = it.estilos.contains(EstiloNatacion.CROL)
+            checkboxEspalda.isChecked = it.estilos.contains(EstiloNatacion.ESPALDA)
+            checkboxBraza.isChecked = it.estilos.contains(EstiloNatacion.BRAZA)
+            checkboxMariposa.isChecked = it.estilos.contains(EstiloNatacion.MARIPOSA)
         }
 
         builder.setPositiveButton("Guardar") { _, _ ->
@@ -136,7 +170,23 @@ class EntrenamientosFragment : Fragment() {
             val metros = metrosEditText.text.toString().toIntOrNull() ?: 0
 
             if (objetivo.isNotEmpty() && descripcion.isNotEmpty()) {
-                onGuardar(Tarea(objetivo = objetivo, descripcion = descripcion, metros = metros))
+                // Obtener los estilos seleccionados
+                val estilosSeleccionados = mutableListOf<EstiloNatacion>()
+                if (checkboxCrol.isChecked) estilosSeleccionados.add(EstiloNatacion.CROL)
+                if (checkboxEspalda.isChecked) estilosSeleccionados.add(EstiloNatacion.ESPALDA)
+                if (checkboxBraza.isChecked) estilosSeleccionados.add(EstiloNatacion.BRAZA)
+                if (checkboxMariposa.isChecked) estilosSeleccionados.add(EstiloNatacion.MARIPOSA)
+
+                // Crear o actualizar la tarea con los estilos seleccionados
+                onGuardar(
+                    Tarea(
+                        id = tarea?.id ?: UUID.randomUUID().toString(),
+                        objetivo = objetivo,
+                        descripcion = descripcion,
+                        metros = metros,
+                        estilos = estilosSeleccionados
+                    )
+                )
             } else {
                 Toast.makeText(requireContext(), "Los campos de tarea son obligatorios", Toast.LENGTH_SHORT).show()
             }
@@ -145,6 +195,7 @@ class EntrenamientosFragment : Fragment() {
         builder.setNegativeButton("Cancelar", null)
         builder.create().show()
     }
+
 
     // Editar una tarea existente
     private fun editarTarea(tarea: Tarea) {
@@ -216,13 +267,7 @@ class EntrenamientosFragment : Fragment() {
         actualizarMetrosTotales(requireContext())
     }
 
-    // Mostrar diálogo para agregar tareas durante la edición
-    private fun mostrarDialogoAgregarTareaParaEditar(entrenamiento: Entrenamiento, tareasAdapter: TareasEntrenamientoAdapter) {
-        mostrarDialogoTarea(null) { nuevaTarea ->
-            entrenamiento.tareas.add(nuevaTarea)
-            tareasAdapter.actualizarTareas(entrenamiento.tareas)
-        }
-    }
+
 
     // Eliminar un entrenamiento
     private fun eliminarEntrenamiento(entrenamiento: Entrenamiento) {

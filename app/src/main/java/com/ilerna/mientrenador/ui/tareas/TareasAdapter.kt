@@ -36,26 +36,26 @@ class TareasAdapter(
         return tareas.size
     }
 
-    // ViewHolder que contiene la lógica para mostrar y gestionar cada tarea
     class TareaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Referencias a los elementos del layout (objetivo, descripción, metros, botones)
         private val objetivoTextView: TextView = itemView.findViewById(R.id.textViewObjetivo)
         private val descripcionTextView: TextView = itemView.findViewById(R.id.textViewDescripcion)
         private val metrosTextView: TextView = itemView.findViewById(R.id.textViewMetros)
+        private val estilosTextView: TextView = itemView.findViewById(R.id.textViewEstilos) // Nuevo TextView para estilos
         private val editButton: ImageButton = itemView.findViewById(R.id.buttonEditar)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.buttonEliminar)
 
-        // Función para enlazar la tarea con los datos del layout y asignar los eventos de clic
         fun bind(tarea: Tarea, onEditClick: (Tarea) -> Unit, onDeleteClick: (Tarea) -> Unit) {
-            // Mostrar los datos de la tarea
             objetivoTextView.text = tarea.objetivo
             descripcionTextView.text = tarea.descripcion
             metrosTextView.text = "${tarea.metros} metros"
 
-            // Asignar los clics a los botones de editar y eliminar
+            // Mostrar los estilos seleccionados como una cadena de texto
+            estilosTextView.text = tarea.estilos.joinToString(", ") { it.name }
+
             editButton.setOnClickListener { onEditClick(tarea) }
             deleteButton.setOnClickListener { onDeleteClick(tarea) }
         }
     }
+
 }
 

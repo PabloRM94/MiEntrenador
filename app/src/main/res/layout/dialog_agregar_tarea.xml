@@ -35,4 +35,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="¿Corta?" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkboxCrol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crol" />
+
+        <CheckBox
+            android:id="@+id/checkboxEspalda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Espalda" />
+
+        <CheckBox
+            android:id="@+id/checkboxBraza"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Braza" />
+
+        <CheckBox
+            android:id="@+id/checkboxMariposa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mariposa" />
+    </LinearLayout>
+
 </LinearLayout>

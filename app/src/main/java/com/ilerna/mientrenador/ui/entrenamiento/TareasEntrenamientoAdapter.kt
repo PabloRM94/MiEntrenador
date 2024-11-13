@@ -1,11 +1,10 @@
 package com.ilerna.mientrenador.ui.entrenamiento
 
 
-import android.content.Context
+
 import android.graphics.Color
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Tarea
@@ -25,11 +24,9 @@ class TareasEntrenamientoAdapter(
         return TareaViewHolder(view)
     }
 
-
-
     // Actualizar la lista de tareas en el adaptador
-    fun actualizarTareas(nuevaLista: MutableList<Tarea>) {
-        tareas = nuevaLista
+    fun actualizarTareas(nuevaLista: List<Tarea>) {
+        tareas = nuevaLista.toMutableList()
         notifyDataSetChanged()
     }
     override fun onBindViewHolder(holder: TareaViewHolder, position: Int) {
@@ -62,14 +59,11 @@ class TareasEntrenamientoAdapter(
         return tareasSeleccionadas.toList()
     }
 
-    fun getTareas(): MutableList<Tarea> {
-        return tareas
-    }
-
     class TareaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val objetivoTextView: TextView = itemView.findViewById(R.id.textViewObjetivo)
         private val descripcionTextView: TextView = itemView.findViewById(R.id.textViewDescripcion)
         private val metrosTextView: TextView = itemView.findViewById(R.id.textViewMetros)
+        private val estilosTextView: TextView = itemView.findViewById(R.id.textViewEstilos) // Nuevo TextView para estilos
         private val editButton: ImageButton = itemView.findViewById(R.id.buttonEditar)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.buttonEliminar)
 
@@ -77,6 +71,9 @@ class TareasEntrenamientoAdapter(
             objetivoTextView.text = tarea.objetivo
             descripcionTextView.text = tarea.descripcion
             metrosTextView.text = "${tarea.metros} metros"
+
+            estilosTextView.text = tarea.estilos.joinToString(", ") { it.name }
+
             editButton.setOnClickListener { onEditClick(tarea) }
             deleteButton.setOnClickListener { onDeleteClick(tarea) }
         }

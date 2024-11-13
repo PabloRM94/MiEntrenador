@@ -8,5 +8,7 @@ data class Tarea(
     var descripcion: String = "",
     var metros: Int = 0,
     var desarrollo: Boolean = false,
-    var corta: Boolean = false
+    var corta: Boolean = false,
+    var estilos: MutableList<EstiloNatacion> = mutableListOf()
 )
+

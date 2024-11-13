@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.*
 import androidx.appcompat.widget.SearchView
 import com.ilerna.mientrenador.R
+import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
+import com.ilerna.mientrenador.utils.TareasUtils
+
 
 class TareasFragment : Fragment() {
 
@@ -58,18 +61,16 @@ class TareasFragment : Fragment() {
         searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    buscarTareas(it)
+                    tareasAdapter.actualizarTareas(TareasUtils.filtrarTareas(todasLasTareas, it))
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrBlank()) {
-                    // Si el término está vacío, restauramos todas las tareas
-                    tareasAdapter.actualizarTareas(todasLasTareas)
-                } else {
-                    buscarTareas(newText)
-                }
+                tareasAdapter.actualizarTareas(
+                    if (newText.isNullOrBlank()) todasLasTareas
+                    else TareasUtils.filtrarTareas(todasLasTareas, newText)
+                )
                 return false
             }
         })
@@ -77,20 +78,6 @@ class TareasFragment : Fragment() {
         return view
     }
 
-    // Función para buscar las tareas por el término de búsqueda (insensible a mayúsculas/minúsculas)
-    fun buscarTareas(termino: String) {
-        val terminoLowerCase = termino.lowercase()
-
-        // Filtrar las tareas en base al término de búsqueda (en campos objetivo, descripcion y metros)
-        val tareasFiltradas = todasLasTareas.filter { tarea ->
-            tarea.objetivo.lowercase().contains(terminoLowerCase) ||  // Comparar objetivo ignorando mayúsculas
-                    tarea.descripcion.lowercase().contains(terminoLowerCase) ||  // Comparar descripcion ignorando mayúsculas
-                    tarea.metros.toString().contains(termino)  // Para el campo metros, buscamos la coincidencia exacta del número
-        }
-
-        // Actualizar el adaptador con las tareas filtradas
-        tareasAdapter.actualizarTareas(tareasFiltradas)
-    }
 
     // Función para cargar todas las tareas desde Firestore y almacenarlas en `todasLasTareas`
     private fun cargarTareas() {
@@ -122,34 +109,39 @@ class TareasFragment : Fragment() {
         val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
         val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
 
-        // Al hacer clic en el botón de guardar
+        // Referencias a los checkboxes de los estilos de natación
+        val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
+        val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
+        val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
+        val checkboxMariposa = dialogView.findViewById<CheckBox>(R.id.checkboxMariposa)
+
         builder.setPositiveButton("Guardar") { _, _ ->
             val objetivo = objetivoEditText.text.toString().trim()
             val descripcion = descripcionEditText.text.toString().trim()
+            val metros = metrosEditText.text.toString().toIntOrNull() ?: -1
+            val desarrollo = desarrolloSwitch.isChecked
+            val corta = cortaSwitch.isChecked
 
-            // Convertir el texto de metros a un número entero
-            val metros = metrosEditText.text.toString().toIntOrNull() ?: -1 // Valor por defecto si no se puede convertir
-
-            val desarrollo = desarrolloSwitch.isChecked // Booleano correcto
-            val corta = cortaSwitch.isChecked // Booleano correcto
-
-            // Validar que todos los campos obligatorios estén completos y en el formato correcto
+            // Verifica que los campos obligatorios estén completos
             if (objetivo.isEmpty() || descripcion.isEmpty() || metros == -1) {
                 Toast.makeText(requireContext(), "Todos los campos son obligatorios y 'Metros' debe ser un número", Toast.LENGTH_SHORT).show()
             } else {
-                // Llamar a la función para agregar la tarea, pasando los valores correctos
-                agregarTarea(Tarea("", objetivo, descripcion, metros, desarrollo, corta))
+                // Obtener los estilos seleccionados
+                val estilosSeleccionados = mutableListOf<EstiloNatacion>()
+                if (checkboxCrol.isChecked) estilosSeleccionados.add(EstiloNatacion.CROL)
+                if (checkboxEspalda.isChecked) estilosSeleccionados.add(EstiloNatacion.ESPALDA)
+                if (checkboxBraza.isChecked) estilosSeleccionados.add(EstiloNatacion.BRAZA)
+                if (checkboxMariposa.isChecked) estilosSeleccionados.add(EstiloNatacion.MARIPOSA)
+
+                // Crear y guardar la tarea con los estilos seleccionados
+                agregarTarea(Tarea("", objetivo, descripcion, metros, desarrollo, corta, estilosSeleccionados))
             }
         }
 
-        // Botón de cancelar
         builder.setNegativeButton("Cancelar", null)
-
-        // Mostrar el diálogo
         val dialog = builder.create()
         dialog.show()
     }
-
 
 
     // Función para agregar una nueva tarea a Firestore
@@ -175,12 +167,24 @@ class TareasFragment : Fragment() {
         val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
         val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
 
+        // Checkboxes para los estilos de natación
+        val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
+        val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
+        val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
+        val checkboxMariposa = dialogView.findViewById<CheckBox>(R.id.checkboxMariposa)
+
         // Llenar los campos con los datos actuales de la tarea
         objetivoEditText.setText(tarea.objetivo)
         descripcionEditText.setText(tarea.descripcion)
         metrosEditText.setText(tarea.metros.toString())
         desarrolloSwitch.isChecked = tarea.desarrollo
         cortaSwitch.isChecked = tarea.corta
+
+        // Preseleccionar los estilos actuales de la tarea
+        checkboxCrol.isChecked = tarea.estilos.contains(EstiloNatacion.CROL)
+        checkboxEspalda.isChecked = tarea.estilos.contains(EstiloNatacion.ESPALDA)
+        checkboxBraza.isChecked = tarea.estilos.contains(EstiloNatacion.BRAZA)
+        checkboxMariposa.isChecked = tarea.estilos.contains(EstiloNatacion.MARIPOSA)
 
         builder.setPositiveButton("Guardar") { _, _ ->
             val objetivo = objetivoEditText.text.toString().trim()
@@ -192,12 +196,20 @@ class TareasFragment : Fragment() {
             if (objetivo.isEmpty() || descripcion.isEmpty() || metros == null) {
                 Toast.makeText(requireContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show()
             } else {
+                // Obtener los estilos seleccionados
+                val estilosSeleccionados = mutableListOf<EstiloNatacion>()
+                if (checkboxCrol.isChecked) estilosSeleccionados.add(EstiloNatacion.CROL)
+                if (checkboxEspalda.isChecked) estilosSeleccionados.add(EstiloNatacion.ESPALDA)
+                if (checkboxBraza.isChecked) estilosSeleccionados.add(EstiloNatacion.BRAZA)
+                if (checkboxMariposa.isChecked) estilosSeleccionados.add(EstiloNatacion.MARIPOSA)
+
                 // Actualizar la tarea en Firestore
                 tarea.objetivo = objetivo
                 tarea.descripcion = descripcion
                 tarea.metros = metros
                 tarea.desarrollo = desarrollo
                 tarea.corta = corta
+                tarea.estilos = estilosSeleccionados
 
                 firestore.collection("tareas").document(tarea.id).set(tarea)
                     .addOnSuccessListener {
@@ -215,7 +227,6 @@ class TareasFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
     }
-
 
     fun eliminarTarea(tarea: Tarea) {
         AlertDialog.Builder(requireContext())
