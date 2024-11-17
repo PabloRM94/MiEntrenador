@@ -1,7 +1,10 @@
 package com.ilerna.mientrenador.ui.authentication
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -16,13 +19,17 @@ import com.ilerna.mientrenador.ui.data.Usuario
 class AuthFragment : Fragment() {
 
     private lateinit var emailEditText: EditText
-    private lateinit var passwordEditText: EditText
+    private lateinit var ContrasenaEditText: EditText
+    private lateinit var verContrasena: ImageView
     private lateinit var loginButton: Button
     private lateinit var signupButton: Button
+    private lateinit var recuperarContrasenaTextView: TextView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var firestore: FirebaseFirestore
+    private var ContrasenaVisible: Boolean  = false
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,9 +43,23 @@ class AuthFragment : Fragment() {
 
         // Vincular elementos del XML
         emailEditText = view.findViewById(R.id.editTextTextEmailAddress)
-        passwordEditText = view.findViewById(R.id.text_pass)
+        ContrasenaEditText = view.findViewById(R.id.text_pass)
+        verContrasena = view.findViewById(R.id.verContraseña)
+        recuperarContrasenaTextView = view.findViewById(R.id.recuperarContrasena)
         loginButton = view.findViewById(R.id.Accederbutton)
         signupButton = view.findViewById(R.id.singupButton)
+        verContrasena.setOnClickListener {
+            if (ContrasenaVisible) {
+                // Ocultar contraseña
+                ContrasenaEditText.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            } else {
+                // Mostrar contraseña
+                ContrasenaEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            }
+            ContrasenaEditText.setSelection(ContrasenaEditText.text.length)
+            ContrasenaVisible = !ContrasenaVisible // Actualizar el estado de visibilidad
+        }
 
         // Manejar el botón de registro
         signupButton.setOnClickListener { registrarUsuario() }
@@ -46,20 +67,46 @@ class AuthFragment : Fragment() {
         // Manejar el botón de login
         loginButton.setOnClickListener { accederUsuario() }
 
+        recuperarContrasenaTextView.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(requireContext(), "Por favor, introduce tu email para continuar", Toast.LENGTH_SHORT).show()
+            } else {
+                // Crear un diálogo para confirmar antes de enviar el correo
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Confirmar recuperación de contraseña")
+                builder.setMessage("Se enviará un correo a $email para recuperar tu contraseña. ¿Deseas continuar?")
+                builder.setPositiveButton("Sí") { dialog, _ ->
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Correo enviado para restablecer contraseña", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    dialog.dismiss()
+                }
+                builder.setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.create().show()
+            }
+        }
+
         return view
     }
 
     // Función para registrar al usuario con correo y contraseña
     private fun registrarUsuario() {
         val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString().trim()
+        val password = ContrasenaEditText.text.toString().trim()
 
         if (email.isEmpty()) {
             emailEditText.error = "Por favor, introduce un email"
             return
         }
         if (password.isEmpty()) {
-            passwordEditText.error = "Por favor, introduce una contraseña"
+            ContrasenaEditText.error = "Por favor, introduce una contraseña"
             return
         }
 
@@ -95,14 +142,14 @@ class AuthFragment : Fragment() {
     // Función para acceder al usuario con correo y contraseña
     private fun accederUsuario() {
         val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString().trim()
+        val password = ContrasenaEditText.text.toString().trim()
 
         if (email.isEmpty()) {
             emailEditText.error = "Por favor, introduce un email"
             return
         }
         if (password.isEmpty()) {
-            passwordEditText.error = "Por favor, introduce una contraseña"
+            ContrasenaEditText.error = "Por favor, introduce una contraseña"
             return
         }
 
@@ -136,7 +183,6 @@ class AuthFragment : Fragment() {
             }
     }
 
-    // Mostrar formulario para completar o editar el perfil del usuario
     private fun mostrarFormularioPerfil(user: FirebaseUser?, contrasena: String, esEdicion: Boolean) {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
@@ -145,6 +191,7 @@ class AuthFragment : Fragment() {
 
         // Vinculación de los campos del formulario
         val nombreEditText: EditText = dialogView.findViewById(R.id.editTextNombre)
+        val apellidosEditText: EditText = dialogView.findViewById(R.id.editTextApellido)
         val edadEditText: EditText = dialogView.findViewById(R.id.editTextEdad)
         val clubEditText: EditText = dialogView.findViewById(R.id.editTextClub)
         val anosNadandoEditText: EditText = dialogView.findViewById(R.id.editTextAnosNadando)
@@ -163,24 +210,68 @@ class AuthFragment : Fragment() {
             }
         }
 
-        // Guardar los datos del perfil en Firestore al confirmar el formulario
-        builder.setPositiveButton("Guardar") { _, _ ->
+        // Crear el diálogo
+        builder.setPositiveButton("Guardar", null)
+        builder.setNegativeButton("Cancelar", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+        // Obtener el botón Guardar del diálogo
+        val guardarButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+        // Inicialmente deshabilitar el botón Guardar
+        guardarButton.isEnabled = false
+
+        // Validar campos en tiempo real
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Validar campos dinámicamente
+                guardarButton.isEnabled = validarCamposPerfilEnTiempoReal(
+                    nombreEditText,
+                    edadEditText,
+                    clubEditText,
+                    anosNadandoEditText
+                )
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        }
+
+        // Añadir TextWatcher a los campos obligatorios
+        nombreEditText.addTextChangedListener(textWatcher)
+        edadEditText.addTextChangedListener(textWatcher)
+        clubEditText.addTextChangedListener(textWatcher)
+        anosNadandoEditText.addTextChangedListener(textWatcher)
+
+        // Configurar el botón Guardar para guardar los datos si la validación es correcta
+        guardarButton.setOnClickListener {
+            if (!validarCamposPerfilEnTiempoReal(
+                    nombreEditText,
+                    edadEditText,
+                    clubEditText,
+                    anosNadandoEditText
+                )
+            ) {
+                Toast.makeText(requireContext(), "Por favor, rellena los campos obligatorios", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Guardar los datos del perfil en Firestore
             val nombre = nombreEditText.text.toString().trim()
+            val apellidos = apellidosEditText.text.toString().trim()
             val edad = edadEditText.text.toString().trim()
             val club = clubEditText.text.toString().trim()
             val anosNadando = anosNadandoEditText.text.toString().trim()
             val estiloFavorito = estiloFavoritoEditText.text.toString().trim()
             val pruebaFavorita = pruebaFavoritaEditText.text.toString().trim()
 
-            if (!validarCamposPerfil(nombre, edad, club, anosNadando)) {
-                return@setPositiveButton
-            }
-
-            // Guardar los datos del usuario en Firebase Firestore
-            val usuarioId = user?.uid ?: return@setPositiveButton
+            val usuarioId = user?.uid ?: return@setOnClickListener
             val usuario = Usuario(
                 email = user.email,
                 nombre = nombre,
+                apellidos = apellidos,
                 edad = edad.toInt(),
                 club = club,
                 anosNadando = if (anosNadando.isNotEmpty()) anosNadando.toInt() else null,
@@ -189,7 +280,6 @@ class AuthFragment : Fragment() {
                 contrasena = contrasena
             )
 
-            // Guardar los datos en Firestore en la colección "usuarios"
             firestore.collection("usuarios").document(usuarioId)
                 .set(usuario)
                 .addOnSuccessListener {
@@ -198,6 +288,7 @@ class AuthFragment : Fragment() {
                         "Perfil guardado correctamente",
                         Toast.LENGTH_SHORT
                     ).show()
+                    dialog.dismiss()
                 }
                 .addOnFailureListener {
                     Toast.makeText(
@@ -207,36 +298,41 @@ class AuthFragment : Fragment() {
                     ).show()
                 }
         }
-
-        builder.setNegativeButton("Cancelar", null)
-        val dialog = builder.create()
-        dialog.show()
     }
 
-    // Validar los campos del perfil antes de guardar
-    private fun validarCamposPerfil(
-        nombre: String,
-        edad: String,
-        club: String,
-        anosNadando: String
+    // Validar campos en tiempo real
+    private fun validarCamposPerfilEnTiempoReal(
+        nombreEditText: EditText,
+        edadEditText: EditText,
+        clubEditText: EditText,
+        anosNadandoEditText: EditText
     ): Boolean {
-        if (nombre.isEmpty()) {
-            Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show()
-            return false
+        var esValido = true
+
+        // Validar nombre
+        if (nombreEditText.text.toString().trim().isEmpty()) {
+            esValido = false
         }
+
+        // Validar edad
+        val edad = edadEditText.text.toString().trim()
         if (edad.isEmpty() || !edad.matches("\\d+".toRegex())) {
-            Toast.makeText(requireContext(), "Introduce una edad válida", Toast.LENGTH_SHORT).show()
-            return false
+            esValido = false
         }
+
+        // Validar años nadando (opcional, pero numérico si se introduce)
+        val anosNadando = anosNadandoEditText.text.toString().trim()
         if (anosNadando.isNotEmpty() && !anosNadando.matches("\\d+".toRegex())) {
-            Toast.makeText(requireContext(), "Introduce un valor numérico válido para los años nadando", Toast.LENGTH_SHORT).show()
-            return false
+            esValido = false
         }
-        if (club.isEmpty()) {
-            Toast.makeText(requireContext(), "El club es obligatorio", Toast.LENGTH_SHORT).show()
-            return false
+
+        // Validar club
+        if (clubEditText.text.toString().trim().isEmpty()) {
+            esValido = false
         }
-        return true
+
+        return esValido
     }
+
 }
 

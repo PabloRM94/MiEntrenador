@@ -7,18 +7,19 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import androidx.appcompat.widget.SearchView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Entrenamiento
 import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
 import com.ilerna.mientrenador.utils.TareasUtils
-
 import java.util.UUID
+
 
 class EntrenamientosFragment : Fragment() {
 
@@ -28,6 +29,8 @@ class EntrenamientosFragment : Fragment() {
     private var tareasList: MutableList<Tarea> = mutableListOf()
     private var entrenamientosList: MutableList<Entrenamiento> = mutableListOf()
     private var currentEntrenamiento: Entrenamiento = Entrenamiento()
+    private lateinit var seccionCrearEntrenamiento: LinearLayout
+    private lateinit var seccionVerEntrenamiento: LinearLayout
 
 
     override fun onCreateView(
@@ -45,6 +48,16 @@ class EntrenamientosFragment : Fragment() {
         setupRecyclerViews(view)
         cargarEntrenamientos()
 
+        seccionCrearEntrenamiento = view.findViewById(R.id.seccionCrearEntrenamiento)
+        seccionVerEntrenamiento = view.findViewById(R.id.seccionVerEntrenamientos)
+
+
+        view.findViewById<Button>(R.id.buttonEntrenamiento).setOnClickListener {
+            Visibilidad(seccionCrearEntrenamiento)
+        }
+        view.findViewById<Button>(R.id.buttonConsulta).setOnClickListener {
+            Visibilidad(seccionVerEntrenamiento)
+        }
         view.findViewById<Button>(R.id.buttonAgregarTarea).setOnClickListener {
             mostrarOpcionesTareas()
         }
@@ -52,6 +65,14 @@ class EntrenamientosFragment : Fragment() {
         view.findViewById<Button>(R.id.buttonGuardarEntrenamiento).setOnClickListener {
             guardarEntrenamiento()
         }
+
+        view.findViewById<Button>(R.id.buttonNuevoEntrenamiento).setOnClickListener {
+            nuevoEntrenamiento()
+        }
+    }
+    // Función para alternar la visibilidad de un LinearLayout
+    private fun Visibilidad (section: LinearLayout) {
+        section.visibility = if (section.visibility == View.GONE) View.VISIBLE else View.GONE
     }
 
     // Configurar los RecyclerViews para Tareas y Entrenamientos
@@ -67,14 +88,118 @@ class EntrenamientosFragment : Fragment() {
         recyclerViewEntrenamientos.adapter = entrenamientosAdapter
     }
 
-    // Mostrar un diálogo para agregar una nueva tarea
-    private fun mostrarDialogoAgregarTarea() {
-        mostrarDialogoTarea(null) { nuevaTarea ->
-            tareasList.add(nuevaTarea)
-            tareasAdapter.actualizarTareas(tareasList)
-            actualizarMetrosTotales(requireContext())
+    // Limpiar datos para un nuevo entrenamiento
+    private fun nuevoEntrenamiento() {
+        currentEntrenamiento = Entrenamiento()
+        tareasList.clear()
+        tareasAdapter.actualizarTareas(tareasList)
+
+        view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)?.setText("")
+        view?.findViewById<TextView>(R.id.textViewSumaTotalMetros)?.text = getString(R.string.total_metros, 0)
+
+        Toast.makeText(requireContext(), "Entrenamiento nuevo iniciado", Toast.LENGTH_SHORT).show()
+    }
+    private fun guardarEntrenamiento() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para guardar entrenamientos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val nombreEntrenamiento = view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)?.text.toString().trim()
+
+        if (nombreEntrenamiento.isNotEmpty()) {
+            currentEntrenamiento.nombre = nombreEntrenamiento
+            currentEntrenamiento.tareas = tareasList
+            currentEntrenamiento.numeroTareas = tareasList.size
+            currentEntrenamiento.metrosTotales = tareasList.sumOf { it.metros }
+
+            val entrenamientoId = currentEntrenamiento.id.takeIf { it.isNotEmpty() }
+                ?: firestore.collection("usuarios").document(user.uid).collection("entrenamientosUsuario").document().id
+
+            currentEntrenamiento.id = entrenamientoId
+
+            firestore.collection("usuarios").document(user.uid).collection("entrenamientosUsuario").document(entrenamientoId)
+                .set(currentEntrenamiento)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Entrenamiento guardado con éxito", Toast.LENGTH_SHORT).show()
+                    cargarEntrenamientos()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error al guardar el entrenamiento", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(requireContext(), "El nombre del entrenamiento no puede estar vacío", Toast.LENGTH_SHORT).show()
         }
     }
+
+    // Editar un entrenamiento
+    private fun editarEntrenamiento(entrenamiento: Entrenamiento) {
+        currentEntrenamiento = entrenamiento
+
+        val editTextNombreEntrenamiento = view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)
+        editTextNombreEntrenamiento?.setText(entrenamiento.nombre)
+
+        tareasList = entrenamiento.tareas.toMutableList()
+        tareasAdapter.actualizarTareas(tareasList)
+        actualizarMetrosTotales(requireContext())
+    }
+
+
+
+    // Eliminar un entrenamiento
+    private fun eliminarEntrenamiento(entrenamiento: Entrenamiento) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para eliminar entrenamientos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar Entrenamiento")
+            .setMessage("¿Estás seguro de que deseas eliminar este entrenamiento?")
+            .setPositiveButton("Sí") { _, _ ->
+                firestore.collection("usuarios").document(user.uid).collection("entrenamientosUsuario").document(entrenamiento.id)
+                    .delete()
+                    .addOnSuccessListener {
+                        entrenamientosList.remove(entrenamiento)
+                        entrenamientosAdapter.notifyDataSetChanged()
+                        Toast.makeText(requireContext(), "Entrenamiento eliminado", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(requireContext(), "Error al eliminar el entrenamiento", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .setNegativeButton("No", null)
+            .create()
+            .show()
+    }
+
+    // Actualizar metros totales
+    private fun actualizarMetrosTotales(context: Context) {
+        val totalMetros = tareasList.sumOf { it.metros }
+        val textViewSumaTotalMetros = view?.findViewById<TextView>(R.id.textViewSumaTotalMetros)
+        textViewSumaTotalMetros?.text = context.getString(R.string.total_metros, totalMetros)
+    }
+
+    // Cargar entrenamientos desde Firestore
+    private fun cargarEntrenamientos() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para cargar entrenamientos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        firestore.collection("usuarios").document(user.uid).collection("entrenamientosUsuario").get()
+            .addOnSuccessListener { result ->
+                entrenamientosList = result.toObjects(Entrenamiento::class.java)
+                entrenamientosAdapter.actualizarEntrenamientos(entrenamientosList)
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al cargar entrenamientos", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     // Mostrar las opciones: seleccionar tareas existentes o agregar nuevas tareas
     private fun mostrarOpcionesTareas() {
         val opciones = arrayOf("Seleccionar tareas existentes", "Crear nueva tarea")
@@ -88,8 +213,22 @@ class EntrenamientosFragment : Fragment() {
             }
             .show()
     }
+    // Mostrar un diálogo para agregar una nueva tarea
+    private fun mostrarDialogoAgregarTarea() {
+        mostrarDialogoTarea(null) { nuevaTarea ->
+            tareasList.add(nuevaTarea)
+            tareasAdapter.actualizarTareas(tareasList)
+            actualizarMetrosTotales(requireContext())
+        }
+    }
     @SuppressLint("MissingInflatedId")
     private fun mostrarDialogoSeleccionarTareas() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para seleccionar tareas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val builder = AlertDialog.Builder(requireContext())
         val dialogView = layoutInflater.inflate(R.layout.dialog_seleccionar_tareas, null)
         builder.setView(dialogView)
@@ -101,29 +240,37 @@ class EntrenamientosFragment : Fragment() {
         val tareasExistentesAdapter = TareasEntrenamientoAdapter(mutableListOf(), ::editarTarea, ::eliminarTarea)
         recyclerViewTareasExistentes.adapter = tareasExistentesAdapter
 
-        // Cargar las tareas existentes desde Firestore
-        firestore.collection("tareas").get().addOnSuccessListener { result ->
-            val tareasExistentes = result.toObjects(Tarea::class.java)
-            tareasExistentesAdapter.actualizarTareas(tareasExistentes.toMutableList())
+        val userId = user.uid
+        val tareasExistentes = mutableListOf<Tarea>()
 
-            // Configurar búsqueda en tiempo real
-            searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let {
-                        tareasExistentesAdapter.actualizarTareas(TareasUtils.filtrarTareas(tareasExistentes, it))
+        // Cargar tareas desde la subcolección del usuario
+        firestore.collection("usuarios").document(userId).collection("tareasUsuario").get()
+            .addOnSuccessListener { privateResult ->
+                tareasExistentes.addAll(privateResult.toObjects(Tarea::class.java))
+
+                // Configurar búsqueda en tiempo real
+                searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        query?.let {
+                            tareasExistentesAdapter.actualizarTareas(TareasUtils.filtrarTareas(tareasExistentes, it))
+                        }
+                        return false
                     }
-                    return false
-                }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    tareasExistentesAdapter.actualizarTareas(
-                        if (newText.isNullOrBlank()) tareasExistentes
-                        else TareasUtils.filtrarTareas(tareasExistentes, newText)
-                    )
-                    return false
-                }
-            })
-        }
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        tareasExistentesAdapter.actualizarTareas(
+                            if (newText.isNullOrBlank()) tareasExistentes
+                            else TareasUtils.filtrarTareas(tareasExistentes, newText)
+                        )
+                        return false
+                    }
+                })
+
+                tareasExistentesAdapter.actualizarTareas(tareasExistentes.toMutableList())
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al cargar las tareas del usuario", Toast.LENGTH_SHORT).show()
+            }
 
         builder.setPositiveButton("Añadir") { _, _ ->
             // Añadir las tareas seleccionadas al entrenamiento actual
@@ -136,6 +283,7 @@ class EntrenamientosFragment : Fragment() {
         builder.setNegativeButton("Cancelar", null)
         builder.create().show()
     }
+
 
     // Mostrar un diálogo reutilizable para agregar/editar una tarea
     private fun mostrarDialogoTarea(tarea: Tarea?, onGuardar: (Tarea) -> Unit) {
@@ -227,88 +375,6 @@ class EntrenamientosFragment : Fragment() {
             .show()
     }
 
-    // Guardar el entrenamiento con las tareas en Firestore
-    private fun guardarEntrenamiento() {
-        val nombreEntrenamiento = view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)?.text.toString().trim()
 
-        if (nombreEntrenamiento.isNotEmpty()) {
-            currentEntrenamiento.nombre = nombreEntrenamiento
-            currentEntrenamiento.tareas = tareasList
-            currentEntrenamiento.numeroTareas = tareasList.size
-            currentEntrenamiento.metrosTotales = tareasList.sumOf { it.metros }
-
-            val entrenamientoId = currentEntrenamiento.id.takeIf { it.isNotEmpty() } ?: firestore.collection("entrenamientos").document().id
-            currentEntrenamiento.id = entrenamientoId
-
-            firestore.collection("entrenamientos").document(entrenamientoId)
-                .set(currentEntrenamiento)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Entrenamiento guardado con éxito", Toast.LENGTH_SHORT).show()
-                    cargarEntrenamientos()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(requireContext(), "Error al guardar el entrenamiento", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            Toast.makeText(requireContext(), "El nombre del entrenamiento no puede estar vacío", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // Editar un entrenamiento
-    private fun editarEntrenamiento(entrenamiento: Entrenamiento) {
-        // Configurar el entrenamiento actual con el seleccionado
-        currentEntrenamiento = entrenamiento
-
-        // Establecer el nombre del entrenamiento en el EditText
-        val editTextNombreEntrenamiento = view?.findViewById<EditText>(R.id.editTextNumeroEntrenamiento)
-        editTextNombreEntrenamiento?.setText(entrenamiento.nombre)
-
-        // Actualizar la lista de tareas en el RecyclerView de tareas
-        tareasList = entrenamiento.tareas.toMutableList()
-        tareasAdapter.actualizarTareas(tareasList)
-        actualizarMetrosTotales(requireContext())
-    }
-
-
-
-    // Eliminar un entrenamiento
-    private fun eliminarEntrenamiento(entrenamiento: Entrenamiento) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Eliminar Entrenamiento")
-            .setMessage("¿Estás seguro de que deseas eliminar este entrenamiento?")
-            .setPositiveButton("Sí") { _, _ ->
-                firestore.collection("entrenamientos").document(entrenamiento.id).delete()
-                    .addOnSuccessListener {
-                        entrenamientosList.remove(entrenamiento)
-                        entrenamientosAdapter.notifyDataSetChanged()
-                        Toast.makeText(requireContext(), "Entrenamiento eliminado", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "Error al eliminar el entrenamiento", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .setNegativeButton("No", null)
-            .create()
-            .show()
-    }
-
-    // Actualizar metros totales
-    private fun actualizarMetrosTotales(context: Context) {
-        val totalMetros = tareasList.sumOf { it.metros }
-        val textViewSumaTotalMetros = view?.findViewById<TextView>(R.id.textViewSumaTotalMetros)
-        textViewSumaTotalMetros?.text = context.getString(R.string.total_metros, totalMetros)
-    }
-
-    // Cargar entrenamientos desde Firestore
-    private fun cargarEntrenamientos() {
-        firestore.collection("entrenamientos").get()
-            .addOnSuccessListener { result ->
-                entrenamientosList = result.toObjects(Entrenamiento::class.java)
-                entrenamientosAdapter.actualizarEntrenamientos(entrenamientosList)
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al cargar entrenamientos", Toast.LENGTH_SHORT).show()
-            }
-    }
 }
 

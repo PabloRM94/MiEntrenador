@@ -1,66 +1,319 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#A32F84C8">
 
-    <!-- Campo para mostrar/editar el nombre -->
-    <EditText
-        android:id="@+id/editTextNombre"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nombre" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <!-- Campo para mostrar/editar la edad -->
-    <EditText
-        android:id="@+id/editTextEdad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Edad"
-        android:inputType="number" />
 
-    <!-- Campo para mostrar/editar el club -->
-    <EditText
-        android:id="@+id/editTextClub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Club" />
+        <Button
+            android:id="@+id/botonPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/teal_700"
+            android:text="PERFIL"
+            android:textColor="@color/black" />
 
-    <!-- Campo para mostrar/editar los años nadando -->
-    <EditText
-        android:id="@+id/editTextAnosNadando"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Años Nadando"
-        android:inputType="number" />
+        <LinearLayout
+            android:id="@+id/seccionPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-    <!-- Campo para mostrar/editar el estilo favorito -->
-    <EditText
-        android:id="@+id/editTextEstiloFavorito"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Estilo Favorito" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
-    <!-- Campo para mostrar/editar la prueba favorita -->
-    <EditText
-        android:id="@+id/editTextPruebaFavorita"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Prueba Favorita" />
+                <TextView
+                    android:id="@+id/textViewTitulo"
+                    android:layout_width="277dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingBottom="16dp"
+                    android:text="Perfil del "
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-    <!-- Botón para guardar cambios en el perfil -->
-    <Button
-        android:id="@+id/guardarButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Guardar Cambios" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="Logo"
+                    app:srcCompat="@drawable/pabels_logo" />
 
-    <!-- Botón para cerrar sesión -->
-    <Button
-        android:id="@+id/cerrarSesionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cerrar Sesión"
-        android:layout_marginTop="20dp" />
-</LinearLayout>
+            </LinearLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:columnCount="2"
+                android:rowCount="4">
+
+                <!-- Nombre -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Nombre"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Ingresa tu nombre"
+                        android:padding="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Apellidos"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextApellido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Ingresa tus apellidos"
+                        android:padding="10dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:columnCount="2"
+                android:rowCount="4">
+                <!-- Edad -->
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Edad"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextEdad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Ingresa tu edad"
+                        android:inputType="number"
+                        android:padding="10dp" />
+                </LinearLayout>
+
+                <!-- Localidad -->
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Localidad"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextLocalidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Localidad"
+                        android:padding="10dp" />
+                </LinearLayout>
+                <!-- Club -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Club"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextClub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Ingresa el club"
+                        android:padding="10dp" />
+                </LinearLayout>
+
+                <!-- Años Nadando -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Años Nadando"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextAnosNadando"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Años nadando"
+                        android:inputType="number"
+                        android:padding="10dp" />
+                </LinearLayout>
+
+                <!-- Estilo Favorito -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Estilo Favorito"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextEstiloFavorito"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Estilo favorito"
+                        android:padding="10dp" />
+                </LinearLayout>
+
+                <!-- Prueba Favorita -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Prueba Favorita"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextPruebaFavorita"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="Prueba favorita"
+                        android:padding="10dp" />
+                </LinearLayout>
+            </GridLayout>
+
+            <Button
+                android:id="@+id/guardarButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/yellow_700"
+                android:text="Guardar Cambios"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnTareas"
+                android:layout_width="180dp"
+                android:layout_height="150dp"
+
+                android:layout_marginEnd="15dp"
+                android:backgroundTint="#54C3B9"
+                android:text="Tareas"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btnEntrenamientos"
+                android:layout_width="180dp"
+                android:layout_height="150dp"
+                android:backgroundTint="#54C3B9"
+                android:text="Entrenamientos"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/cerrarSesionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="#B00020"
+            android:text="Cerrar Sesión"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</ScrollView>

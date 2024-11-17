@@ -8,9 +8,9 @@ object TareasUtils {
         val terminoLowerCase = termino.lowercase()
         return tareas.filter { tarea ->
             tarea.objetivo.lowercase().contains(terminoLowerCase) ||
-                    tarea.descripcion.lowercase().contains(terminoLowerCase) ||
-                    tarea.metros.toString().contains(termino)
-                    tarea.estilos.any { estilo -> estilo.name.lowercase().contains(terminoLowerCase)}
+            tarea.descripcion.lowercase().contains(terminoLowerCase) ||
+            tarea.metros.toString().contains(termino) ||
+            tarea.estilos.any { estilo -> estilo.name.lowercase().contains(terminoLowerCase)}
         }
     }
 }

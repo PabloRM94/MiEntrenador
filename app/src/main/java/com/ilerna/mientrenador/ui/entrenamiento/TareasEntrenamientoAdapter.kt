@@ -2,9 +2,10 @@ package com.ilerna.mientrenador.ui.entrenamiento
 
 
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.view.*
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Tarea
@@ -38,15 +39,7 @@ class TareasEntrenamientoAdapter(
         }
     }
 
-    // Eliminar una tarea específica
-    fun eliminarTarea(tarea: Tarea) {
-        val index = tareas.indexOfFirst { it.id == tarea.id }
-        if (index != -1) {
-            tareas.removeAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
+    @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: TareaViewHolder, position: Int) {
         val tarea = tareas[position]
         holder.bind(tarea, onEditClick, onDeleteClick)
@@ -54,9 +47,9 @@ class TareasEntrenamientoAdapter(
         // Cambiar el fondo del ítem si está seleccionado o no
         holder.itemView.setBackgroundColor(
             if (tareasSeleccionadas.contains(tarea))
-                Color.LTGRAY  // Color de fondo si está seleccionado
+                ContextCompat.getColor(holder.itemView.context, R.color.yellow_700)
             else
-                Color.WHITE   // Color de fondo normal
+                ContextCompat.getColor(holder.itemView.context, R.color.purple_500)
         )
 
         // Controlar la selección del ítem
@@ -81,7 +74,7 @@ class TareasEntrenamientoAdapter(
         private val objetivoTextView: TextView = itemView.findViewById(R.id.textViewObjetivo)
         private val descripcionTextView: TextView = itemView.findViewById(R.id.textViewDescripcion)
         private val metrosTextView: TextView = itemView.findViewById(R.id.textViewMetros)
-        private val estilosTextView: TextView = itemView.findViewById(R.id.textViewEstilos) // Nuevo TextView para estilos
+        private val estilosTextView: TextView = itemView.findViewById(R.id.textViewEstilos)
         private val editButton: ImageButton = itemView.findViewById(R.id.buttonEditar)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.buttonEliminar)
 

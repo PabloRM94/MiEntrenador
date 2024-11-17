@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.*
 import com.google.firebase.firestore.*
 import androidx.appcompat.widget.SearchView
+import com.google.firebase.auth.FirebaseAuth
 import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
 import com.ilerna.mientrenador.utils.TareasUtils
-
 
 class TareasFragment : Fragment() {
 
@@ -22,7 +22,7 @@ class TareasFragment : Fragment() {
     private lateinit var agregarTareaButton: Button
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var searchViewTareas: SearchView
-    private var todasLasTareas: List<Tarea> = emptyList()  // Lista para almacenar todas las tareas
+    private var todasLasTareas: List<Tarea> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +30,6 @@ class TareasFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tareas, container, false)
 
-        // Inicializar Firestore
         firestore = FirebaseFirestore.getInstance()
 
         // Vincular elementos del layout
@@ -40,24 +39,17 @@ class TareasFragment : Fragment() {
 
         // Configurar RecyclerView
         tareasList.layoutManager = LinearLayoutManager(requireContext())
-
-        // Inicializar el adaptador con los métodos para editar y eliminar tareas
-        tareasAdapter = TareasAdapter(emptyList(),
-            { tarea -> editarTarea(tarea) },  // Función para editar
-            { tarea -> eliminarTarea(tarea) }  // Función para eliminar
+        tareasAdapter = TareasAdapter(
+            emptyList(),
+            { tarea -> editarTarea(tarea) },
+            { tarea -> eliminarTarea(tarea) }
         )
         tareasList.adapter = tareasAdapter
 
-        // Cargar las tareas desde Firestore
         cargarTareas()
 
-        // Botón para agregar nueva tarea
-        agregarTareaButton.setOnClickListener {
-            mostrarDialogoAgregarTarea()
-        }
+        agregarTareaButton.setOnClickListener { mostrarDialogoAgregarTarea() }
 
-
-        // Configurar el SearchView para buscar en tiempo real
         searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
@@ -77,39 +69,22 @@ class TareasFragment : Fragment() {
 
         return view
     }
-
-
-    // Función para cargar todas las tareas desde Firestore y almacenarlas en `todasLasTareas`
-    private fun cargarTareas() {
-        firestore.collection("tareas").get()
-            .addOnSuccessListener { result ->
-                // Guardamos todas las tareas cargadas
-                todasLasTareas = result.mapNotNull { document ->
-                    document.toObject(Tarea::class.java).apply { id = document.id }
-                }
-
-                // Actualizamos el adaptador para mostrar todas las tareas
-                tareasAdapter.actualizarTareas(todasLasTareas)
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Error al cargar las tareas: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-    // Mostrar un diálogo para agregar una nueva tarea
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
     fun mostrarDialogoAgregarTarea() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para agregar tareas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val builder = AlertDialog.Builder(requireContext())
         val dialogView = layoutInflater.inflate(R.layout.dialog_agregar_tarea, null)
         builder.setView(dialogView)
 
-        // Referencias a los elementos del layout
         val objetivoEditText = dialogView.findViewById<EditText>(R.id.editTextObjetivo)
         val descripcionEditText = dialogView.findViewById<EditText>(R.id.editTextDescripcion)
         val metrosEditText = dialogView.findViewById<EditText>(R.id.editTextMetros)
         val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
         val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
-
-        // Referencias a los checkboxes de los estilos de natación
         val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
         val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
         val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
@@ -122,19 +97,26 @@ class TareasFragment : Fragment() {
             val desarrollo = desarrolloSwitch.isChecked
             val corta = cortaSwitch.isChecked
 
-            // Verifica que los campos obligatorios estén completos
             if (objetivo.isEmpty() || descripcion.isEmpty() || metros == -1) {
                 Toast.makeText(requireContext(), "Todos los campos son obligatorios y 'Metros' debe ser un número", Toast.LENGTH_SHORT).show()
             } else {
-                // Obtener los estilos seleccionados
                 val estilosSeleccionados = mutableListOf<EstiloNatacion>()
                 if (checkboxCrol.isChecked) estilosSeleccionados.add(EstiloNatacion.CROL)
                 if (checkboxEspalda.isChecked) estilosSeleccionados.add(EstiloNatacion.ESPALDA)
                 if (checkboxBraza.isChecked) estilosSeleccionados.add(EstiloNatacion.BRAZA)
                 if (checkboxMariposa.isChecked) estilosSeleccionados.add(EstiloNatacion.MARIPOSA)
 
-                // Crear y guardar la tarea con los estilos seleccionados
-                agregarTarea(Tarea("", objetivo, descripcion, metros, desarrollo, corta, estilosSeleccionados))
+                val tarea = Tarea(
+                    id = "",
+                    objetivo = objetivo,
+                    descripcion = descripcion,
+                    metros = metros,
+                    desarrollo = desarrollo,
+                    corta = corta,
+                    estilos = estilosSeleccionados
+                )
+
+                agregarTarea(user.uid, tarea) // Guardar con el ID del usuario
             }
         }
 
@@ -143,10 +125,10 @@ class TareasFragment : Fragment() {
         dialog.show()
     }
 
+    fun agregarTarea(userId: String, tarea: Tarea) {
+        val tareasCollection = firestore.collection("usuarios").document(userId).collection("tareasUsuario")
 
-    // Función para agregar una nueva tarea a Firestore
-    fun agregarTarea(tarea: Tarea) {
-        firestore.collection("tareas").add(tarea)
+        tareasCollection.add(tarea)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Tarea agregada correctamente", Toast.LENGTH_SHORT).show()
                 cargarTareas() // Recargar las tareas
@@ -157,6 +139,12 @@ class TareasFragment : Fragment() {
     }
 
     fun editarTarea(tarea: Tarea) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para editar tareas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val builder = AlertDialog.Builder(requireContext())
         val dialogView = layoutInflater.inflate(R.layout.dialog_agregar_tarea, null)
         builder.setView(dialogView)
@@ -166,21 +154,17 @@ class TareasFragment : Fragment() {
         val metrosEditText = dialogView.findViewById<EditText>(R.id.editTextMetros)
         val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
         val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
-
-        // Checkboxes para los estilos de natación
         val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
         val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
         val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
         val checkboxMariposa = dialogView.findViewById<CheckBox>(R.id.checkboxMariposa)
 
-        // Llenar los campos con los datos actuales de la tarea
         objetivoEditText.setText(tarea.objetivo)
         descripcionEditText.setText(tarea.descripcion)
         metrosEditText.setText(tarea.metros.toString())
         desarrolloSwitch.isChecked = tarea.desarrollo
         cortaSwitch.isChecked = tarea.corta
 
-        // Preseleccionar los estilos actuales de la tarea
         checkboxCrol.isChecked = tarea.estilos.contains(EstiloNatacion.CROL)
         checkboxEspalda.isChecked = tarea.estilos.contains(EstiloNatacion.ESPALDA)
         checkboxBraza.isChecked = tarea.estilos.contains(EstiloNatacion.BRAZA)
@@ -196,14 +180,12 @@ class TareasFragment : Fragment() {
             if (objetivo.isEmpty() || descripcion.isEmpty() || metros == null) {
                 Toast.makeText(requireContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show()
             } else {
-                // Obtener los estilos seleccionados
                 val estilosSeleccionados = mutableListOf<EstiloNatacion>()
                 if (checkboxCrol.isChecked) estilosSeleccionados.add(EstiloNatacion.CROL)
                 if (checkboxEspalda.isChecked) estilosSeleccionados.add(EstiloNatacion.ESPALDA)
                 if (checkboxBraza.isChecked) estilosSeleccionados.add(EstiloNatacion.BRAZA)
                 if (checkboxMariposa.isChecked) estilosSeleccionados.add(EstiloNatacion.MARIPOSA)
 
-                // Actualizar la tarea en Firestore
                 tarea.objetivo = objetivo
                 tarea.descripcion = descripcion
                 tarea.metros = metros
@@ -211,7 +193,9 @@ class TareasFragment : Fragment() {
                 tarea.corta = corta
                 tarea.estilos = estilosSeleccionados
 
-                firestore.collection("tareas").document(tarea.id).set(tarea)
+                firestore.collection("usuarios").document(user.uid).collection("tareasUsuario")
+                    .document(tarea.id)
+                    .set(tarea)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Tarea actualizada correctamente", Toast.LENGTH_SHORT).show()
                         cargarTareas() // Recargar las tareas
@@ -223,17 +207,43 @@ class TareasFragment : Fragment() {
         }
 
         builder.setNegativeButton("Cancelar", null)
-
         val dialog = builder.create()
         dialog.show()
     }
 
+    private fun cargarTareas() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para ver tareas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        firestore.collection("usuarios").document(user.uid).collection("tareasUsuario").get()
+            .addOnSuccessListener { result ->
+                todasLasTareas = result.mapNotNull { document ->
+                    document.toObject(Tarea::class.java).apply { id = document.id }
+                }
+                tareasAdapter.actualizarTareas(todasLasTareas)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Error al cargar las tareas: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     fun eliminarTarea(tarea: Tarea) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debe iniciar sesión para eliminar tareas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Eliminar Tarea")
             .setMessage("¿Estás seguro de que deseas eliminar esta tarea?")
             .setPositiveButton("Sí") { _, _ ->
-                firestore.collection("tareas").document(tarea.id).delete()
+                firestore.collection("usuarios").document(user.uid).collection("tareasUsuario")
+                    .document(tarea.id)
+                    .delete()
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Tarea eliminada correctamente", Toast.LENGTH_SHORT).show()
                         cargarTareas() // Recargar las tareas
@@ -245,5 +255,6 @@ class TareasFragment : Fragment() {
             .setNegativeButton("No", null)
             .show()
     }
+
 
 }

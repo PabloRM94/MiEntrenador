@@ -1,68 +1,293 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#A32F84C8"
     android:padding="16dp">
 
-    <!-- Campo de texto para el nombre del usuario -->
-    <EditText
-        android:id="@+id/editTextNombre"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Nombre" />
-
-    <!-- Campo de texto para la edad del usuario -->
-    <EditText
-        android:id="@+id/editTextEdad"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Edad"
-        android:inputType="number" />
-
-    <!-- Campo de texto para el club al que pertenece -->
-    <EditText
-
-        android:id="@+id/editTextClub"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Club" />
-
-    <!-- Campo de texto para los años nadando -->
-    <EditText
-        android:id="@+id/editTextAnosNadando"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Años Nadando"
-        android:inputType="number" />
-
-    <!-- Campo de texto para el estilo favorito -->
-    <EditText
-        android:id="@+id/editTextEstiloFavorito"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Estilo Favorito" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
-    <!-- Campo de texto para la prueba favorita -->
-    <EditText
-        android:id="@+id/editTextPruebaFavorita"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Prueba Favorita" />
+            <TextView
+                android:id="@+id/textViewTitulo"
+                android:layout_width="277dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:text="Completar perfil"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-    <!-- Campo de texto para la contraseña -->
-    <EditText
-        android:id="@+id/editTextContrasena"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:inputType="textPassword" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="Logo"
+                app:srcCompat="@drawable/pabels_logo" />
 
-    <!-- CheckBox para mostrar/ocultar la contraseña -->
-    <CheckBox
-        android:id="@+id/mostrarContrasenaCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mostrar contraseña" />
+        </LinearLayout>
 
-</LinearLayout>
+        <!-- Campo de texto para el nombre del usuario -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <EditText
+                android:id="@+id/editTextNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresa tu nombre"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- Campo de texto para el nombre del usuario -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apellidos"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <EditText
+                android:id="@+id/editTextApellido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresa tus Apellidos"
+                android:padding="10dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </LinearLayout>
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:columnCount="2"
+            android:rowCount="4">
+
+            <!-- Campo de texto para la edad -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edad"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:id="@+id/editTextEdad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingresa tu edad"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <!-- Localidad -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Localidad"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    />
+
+                <EditText
+                    android:id="@+id/editTextLocalidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:hint="Localidad"
+                    android:padding="10dp" />
+            </LinearLayout>
+            <!-- Campo de texto para el club -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Club"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:id="@+id/editTextClub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingresa el club"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <!-- Campo de texto para los años nadando -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Años Nadando"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    />
+
+                <EditText
+                    android:id="@+id/editTextAnosNadando"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Años nadando"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <!-- Campo de texto para el estilo favorito -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estilo Favorito"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:id="@+id/editTextEstiloFavorito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Estilo favorito"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <!-- Campo de texto para la prueba favorita -->
+            <LinearLayout
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prueba Favorita"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:id="@+id/editTextPruebaFavorita"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Prueba favorita"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+        </GridLayout>
+
+        <!-- Campo de texto para la contraseña -->
+        <EditText
+            android:id="@+id/editTextContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+
+        <!-- CheckBox para mostrar/ocultar la contraseña -->
+        <CheckBox
+            android:id="@+id/mostrarContrasenaCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostrar contraseña"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</ScrollView>
+

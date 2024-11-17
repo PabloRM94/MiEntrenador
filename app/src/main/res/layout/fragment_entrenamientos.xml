@@ -1,52 +1,127 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#A32F84C8"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Título del entrenamiento -->
-    <EditText
-        android:id="@+id/editTextNumeroEntrenamiento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Nombre Entrenamiento" />
-
-    <!-- RecyclerView para las tareas -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewTareasEntrenamiento"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_margin="16dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Botón para elegir agregar tarea nueva o existente -->
-    <Button
-        android:id="@+id/buttonAgregarTarea"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Agregar Tarea Nueva o Existente" />
+        <TextView
+            android:id="@+id/tituloEntrenamiento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="CREACION DE ENTRENAMIENTOS"
+            android:textColor="#0F0E0E"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <!-- Mostrar la suma total de metros -->
-    <TextView
-        android:id="@+id/textViewSumaTotalMetros"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Suma total metros: 0" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/pabels_logo" />
 
-    <!-- Botón para guardar el entrenamiento -->
-    <Button
-        android:id="@+id/buttonGuardarEntrenamiento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guardar Entrenamiento"
-        android:layout_gravity="center" />
+        <Button
+            android:id="@+id/buttonEntrenamiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_200"
+            android:text="GENERAR ENTRENAMIENTO"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/seccionCrearEntrenamiento"
+            android:layout_width="368dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/editTextNumeroEntrenamiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:gravity="center"
+                android:hint="Nombre Entrenamiento"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/yellow_700"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTareasEntrenamiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+
+            <TextView
+                android:id="@+id/textViewSumaTotalMetros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Total metros:"
+                android:textColor="#0F0E0E"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/buttonAgregarTarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/teal_700"
+                android:text="Agregar Tarea Nueva o Existente"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/buttonGuardarEntrenamiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/teal_700"
+                android:text="Guardar Entrenamiento"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/buttonNuevoEntrenamiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/yellow_700"
+                android:text="Nuevo Entrenamiento"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonConsulta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_200"
+            android:text="MIS ENTRENAMIENTOS"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/seccionVerEntrenamientos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewEntrenamientos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
 
-    <!-- RecyclerView para los entrenamientos -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewEntrenamientos"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
+

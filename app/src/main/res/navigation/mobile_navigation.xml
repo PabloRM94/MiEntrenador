@@ -18,7 +18,14 @@
         android:id="@+id/nav_perfil"
         android:name="com.ilerna.mientrenador.ui.authentication.PerfilFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_perfil" />
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_nav_perfil_to_nav_Tareas"
+            app:destination="@id/nav_Tareas" />
+        <action
+            android:id="@+id/action_nav_perfil_to_nav_entrenamientos"
+            app:destination="@id/nav_entrenamientos" />
+    </fragment>
     <fragment
         android:id="@+id/nav_Tareas"
         android:name="com.ilerna.mientrenador.ui.tareas.TareasFragment"

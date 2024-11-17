@@ -2,39 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/side_nav_bar"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:layout_marginBottom="8dp">
+    android:padding="16dp">
 
+    <!-- Título -->
     <TextView
         android:id="@+id/textViewEstilos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
         android:text="Estilos de natación"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="italic"
-        android:paddingBottom="4dp"
-        android:ellipsize="end"
-        android:maxLines="1" />
+        android:textColor="@color/black"
+        android:textStyle="italic" />
 
-
+    <!-- Contenido de la tarea -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <!-- Objetivo de la tarea -->
         <TextView
             android:id="@+id/textViewObjetivo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Objetivo"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <!-- Descripción de la tarea -->
@@ -43,12 +47,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:layout_marginEnd="8dp"
-            android:ellipsize="none"
-            android:maxLines="100"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:scrollHorizontally="false"
-            android:text="Descripción"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="Descripción de la tarea"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
 
         <!-- Metros de la tarea -->
         <TextView
@@ -57,8 +61,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:gravity="end"
-            android:text="Metros"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="100m"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <!-- Botón para Editar -->
         <ImageButton
@@ -81,5 +87,3 @@
             android:src="@android:drawable/ic_menu_delete" />
     </LinearLayout>
 </LinearLayout>
-
-

@@ -1,26 +1,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#A32F84C8"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Etiqueta y campo para el objetivo -->
+    <TextView
+        android:id="@+id/textViewObjetivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Objetivo"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
 
     <EditText
         android:id="@+id/editTextObjetivo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Objetivo" />
+        android:hint="Escribe el objetivo"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Etiqueta y campo para la descripción -->
+    <TextView
+        android:id="@+id/textViewDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
 
     <EditText
         android:id="@+id/editTextDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción" />
+        android:hint="Escribe la descripción"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Etiqueta y campo para los metros -->
+    <TextView
+        android:id="@+id/textViewMetros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Metros"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
 
     <EditText
         android:id="@+id/editTextMetros"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Metros"
-        android:inputType="number" />
+        android:hint="Ingresa los metros"
+        android:padding="12dp"
+        android:inputType="number"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
 </LinearLayout>
-
