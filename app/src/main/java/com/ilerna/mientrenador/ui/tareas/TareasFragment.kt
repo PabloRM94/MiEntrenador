@@ -1,6 +1,5 @@
 package com.ilerna.mientrenador.ui.tareas
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.*
