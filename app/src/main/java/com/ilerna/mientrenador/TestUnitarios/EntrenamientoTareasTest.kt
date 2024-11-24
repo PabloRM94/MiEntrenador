@@ -1,4 +1,4 @@
-package com.ilerna.mientrenador.pruebasUnitarias
+package com.ilerna.mientrenador.TestUnitarios
 import com.ilerna.mientrenador.ui.data.Entrenamiento
 import com.ilerna.mientrenador.ui.data.EstiloNatacion
 import com.ilerna.mientrenador.ui.data.Tarea
@@ -23,7 +23,6 @@ class EntrenamientoTareasTest {
         val entrenamiento = Entrenamiento(
             id = "1",
             nombre = "Entreno Semana 1",
-            semana = "Semana 1",
             numeroTareas = 0,
             metrosTotales = 0,
             tareas = mutableListOf()

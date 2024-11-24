@@ -24,21 +24,6 @@ class TareasEntrenamientoAdapter(
         return TareaViewHolder(view)
     }
 
-    // Actualizar la lista de tareas en el adaptador
-    fun actualizarTareas(nuevaLista: List<Tarea>) {
-        tareas = nuevaLista.toMutableList()
-        notifyDataSetChanged()
-    }
-
-    // Actualizar una tarea específica
-    fun actualizarTarea(tarea: Tarea) {
-        val index = tareas.indexOfFirst { it.id == tarea.id }
-        if (index != -1) {
-            tareas[index] = tarea
-            notifyItemChanged(index)
-        }
-    }
-
     @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: TareaViewHolder, position: Int) {
         val tarea = tareas[position]
@@ -65,18 +50,34 @@ class TareasEntrenamientoAdapter(
 
     override fun getItemCount(): Int = tareas.size
 
+    // Actualizar la lista de tareas en el adaptador
+    fun actualizarTareas(nuevaLista: List<Tarea>) {
+        tareas = nuevaLista.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    // Actualizar una tarea específica
+    fun actualizarTarea(tarea: Tarea) {
+        val index = tareas.indexOfFirst { it.id == tarea.id }
+        if (index != -1) {
+            tareas[index] = tarea
+            notifyItemChanged(index)
+        }
+    }
+
     // Devuelve la lista de tareas seleccionadas
     fun getTareasSeleccionadas(): List<Tarea> {
         return tareasSeleccionadas.toList()
     }
 
+    // Limpiar las tareas seleccionadas
     class TareaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val objetivoTextView: TextView = itemView.findViewById(R.id.textViewObjetivo)
-        private val descripcionTextView: TextView = itemView.findViewById(R.id.textViewDescripcion)
-        private val metrosTextView: TextView = itemView.findViewById(R.id.textViewMetros)
-        private val estilosTextView: TextView = itemView.findViewById(R.id.textViewEstilos)
-        private val editButton: ImageButton = itemView.findViewById(R.id.buttonEditar)
-        private val deleteButton: ImageButton = itemView.findViewById(R.id.buttonEliminar)
+        private val objetivoTextView: TextView = itemView.findViewById(R.id.Text_Objetivo)
+        private val descripcionTextView: TextView = itemView.findViewById(R.id.Text_Descripcion)
+        private val metrosTextView: TextView = itemView.findViewById(R.id.Text_Metros)
+        private val estilosTextView: TextView = itemView.findViewById(R.id.Text_Estilos)
+        private val editButton: ImageButton = itemView.findViewById(R.id.Bttn_Editar)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.Bttn_Eliminar)
 
         fun bind(tarea: Tarea, onEditClick: (Tarea) -> Unit, onDeleteClick: (Tarea) -> Unit) {
             objetivoTextView.text = tarea.objetivo

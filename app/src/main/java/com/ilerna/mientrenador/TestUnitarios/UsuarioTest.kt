@@ -1,4 +1,4 @@
-package com.ilerna.mientrenador.pruebasUnitarias
+package com.ilerna.mientrenador.TestUnitarios
 
 
 import com.ilerna.mientrenador.ui.data.Usuario

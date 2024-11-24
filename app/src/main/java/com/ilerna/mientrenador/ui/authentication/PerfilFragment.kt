@@ -9,7 +9,6 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.*
 import com.google.firebase.analytics.*
@@ -19,18 +18,17 @@ import com.ilerna.mientrenador.R
 import com.ilerna.mientrenador.ui.data.Usuario
 
 class PerfilFragment : Fragment() {
-    private lateinit var textViewTitulo: TextView
-    private lateinit var nombreEditText: EditText
-    private lateinit var apellidoEditText: EditText
-    private lateinit var edadEditText: EditText
-    private lateinit var clubEditText: EditText
-    private lateinit var anosNadandoEditText: EditText
-    private lateinit var estiloFavoritoEditText: EditText
-    private lateinit var pruebaFavoritaEditText: EditText
-    private lateinit var guardarButton: Button
-    private lateinit var cerrarSesionButton: Button
-    private lateinit var botonPerfil :Button
-    private lateinit var seccionPerfil : LinearLayout
+    private lateinit var NombreUsuario: TextView
+    private lateinit var E_Text_Nombre: EditText
+    private lateinit var E_text_Apellidos: EditText
+    private lateinit var E_Text_Edad: EditText
+    private lateinit var E_Text_Club: EditText
+    private lateinit var E_Text_A_Nadando: EditText
+    private lateinit var E_Text_Est_Fav: EditText
+    private lateinit var E_Text_Prub_Fav: EditText
+    private lateinit var Bttn_Guardar: Button
+    private lateinit var Bttn_CerrarSesion: Button
+    private lateinit var LinLay_Perfil : LinearLayout
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -48,17 +46,17 @@ class PerfilFragment : Fragment() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
 
         // Vincular elementos del layout
-        textViewTitulo = view.findViewById(R.id.textViewTitulo)
-        nombreEditText = view.findViewById(R.id.editTextNombre)
-        apellidoEditText = view.findViewById(R.id.editTextApellido)
-        edadEditText = view.findViewById(R.id.editTextEdad)
-        clubEditText = view.findViewById(R.id.editTextClub)
-        anosNadandoEditText = view.findViewById(R.id.editTextAnosNadando)
-        estiloFavoritoEditText = view.findViewById(R.id.editTextEstiloFavorito)
-        pruebaFavoritaEditText = view.findViewById(R.id.editTextPruebaFavorita)
-        seccionPerfil = view.findViewById(R.id.seccionPerfil)
-        guardarButton = view.findViewById(R.id.guardarButton)
-        cerrarSesionButton = view.findViewById(R.id.cerrarSesionButton)
+        NombreUsuario = view.findViewById(R.id.NombreUsuario)
+        E_Text_Nombre = view.findViewById(R.id.E_Text_Nombre)
+        E_text_Apellidos = view.findViewById(R.id.E_text_Apellidos)
+        E_Text_Edad = view.findViewById(R.id.E_Text_Edad)
+        E_Text_Club = view.findViewById(R.id.E_Text_Club)
+        E_Text_A_Nadando = view.findViewById(R.id.E_Text_A_Nadando)
+        E_Text_Est_Fav = view.findViewById(R.id.E_Text_Est_Fav)
+        E_Text_Prub_Fav = view.findViewById(R.id.E_Text_Prub_Fav)
+        LinLay_Perfil = view.findViewById(R.id.LinLay_Perfil)
+        Bttn_Guardar = view.findViewById(R.id.Bttn_Guardar)
+        Bttn_CerrarSesion = view.findViewById(R.id.Bttn_CerrarSesion)
         val navController = findNavController()
 
         // Recuperar y mostrar los datos del perfil del usuario
@@ -66,7 +64,7 @@ class PerfilFragment : Fragment() {
 
         //Boton mostrar Perfil
         view.findViewById<Button>(R.id.botonPerfil).setOnClickListener {
-            Visibilidad(seccionPerfil)
+            Visibilidad(LinLay_Perfil)
         }
         // Botón para ir al fragmento de entrenamientos
         view.findViewById<Button>(R.id.btnEntrenamientos).setOnClickListener {
@@ -79,22 +77,23 @@ class PerfilFragment : Fragment() {
         }
 
         // Manejar el botón para guardar los cambios en el perfil
-        guardarButton.setOnClickListener {
+        Bttn_Guardar.setOnClickListener {
             guardarPerfilUsuario()
         }
 
         // Manejar el botón para cerrar sesión
-        cerrarSesionButton.setOnClickListener {
+        Bttn_CerrarSesion.setOnClickListener {
             mostrarDialogoCerrarSesion()
         }
 
         return view
     }
 
-    // Función para alternar la visibilidad de un LinearLayout
+    // Función para alternar la visibilidad del LinearLayout
     private fun Visibilidad (section: LinearLayout) {
         section.visibility = if (section.visibility == View.GONE) View.VISIBLE else View.GONE
     }
+
     // Recuperar los datos del perfil del usuario desde Firestore
     private fun recuperarPerfilUsuario() {
         val usuarioId = mAuth.currentUser?.uid ?: return
@@ -106,14 +105,14 @@ class PerfilFragment : Fragment() {
                 val usuario = document.toObject(Usuario::class.java)
 
                 if (usuario != null) {
-                    textViewTitulo.text = "Perfil de ${usuario.nombre}"
-                    nombreEditText.setText(usuario.nombre)
-                    apellidoEditText.setText(usuario.apellidos)
-                    edadEditText.setText(usuario.edad?.toString())
-                    clubEditText.setText(usuario.club)
-                    anosNadandoEditText.setText(usuario.anosNadando?.toString())
-                    estiloFavoritoEditText.setText(usuario.estiloFavorito)
-                    pruebaFavoritaEditText.setText(usuario.pruebaFavorita)
+                    NombreUsuario.text = "Perfil de ${usuario.nombre}"
+                    E_Text_Nombre.setText(usuario.nombre)
+                    E_text_Apellidos.setText(usuario.apellidos)
+                    E_Text_Edad.setText(usuario.edad?.toString())
+                    E_Text_Club.setText(usuario.club)
+                    E_Text_A_Nadando.setText(usuario.anosNadando?.toString())
+                    E_Text_Est_Fav.setText(usuario.estiloFavorito)
+                    E_Text_Prub_Fav.setText(usuario.pruebaFavorita)
 
 
                 } else {
@@ -132,10 +131,10 @@ class PerfilFragment : Fragment() {
                 ).show()
             }
 
-        nombreEditText.addTextChangedListener(object : TextWatcher {
+        E_Text_Nombre.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textViewTitulo.text =
+                NombreUsuario.text =
                     "Perfil de ${s.toString()}"
             }
 
@@ -146,13 +145,13 @@ class PerfilFragment : Fragment() {
     // Guardar los datos del perfil del usuario en Firestore
     private fun guardarPerfilUsuario() {
         val usuarioId = mAuth.currentUser?.uid ?: return
-        val nombre = nombreEditText.text.toString().trim()
-        val apellidos = apellidoEditText.text.toString().trim()
-        val edad = edadEditText.text.toString().trim()
-        val club = clubEditText.text.toString().trim()
-        val anosNadando = anosNadandoEditText.text.toString().trim()
-        val estiloFavorito = estiloFavoritoEditText.text.toString().trim()
-        val pruebaFavorita = pruebaFavoritaEditText.text.toString().trim()
+        val nombre = E_Text_Nombre.text.toString().trim()
+        val apellidos = E_text_Apellidos.text.toString().trim()
+        val edad = E_Text_Edad.text.toString().trim()
+        val club = E_Text_Club.text.toString().trim()
+        val anosNadando = E_Text_A_Nadando.text.toString().trim()
+        val estiloFavorito = E_Text_Est_Fav.text.toString().trim()
+        val pruebaFavorita = E_Text_Prub_Fav.text.toString().trim()
 
         // Validar los datos antes de guardar
         if (nombre.isEmpty() || edad.isEmpty()) {
@@ -189,19 +188,6 @@ class PerfilFragment : Fragment() {
             }
     }
 
-    // Mostrar un AlertDialog para confirmar el cierre de sesión
-    private fun mostrarDialogoCerrarSesion() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Cerrar Sesión")
-        builder.setMessage("¿Estás seguro de que quieres cerrar sesión?")
-        builder.setPositiveButton("Sí") { _, _ ->
-            cerrarSesion()
-        }
-        builder.setNegativeButton("No", null)
-        val dialog = builder.create()
-        dialog.show()
-    }
-
     // Función para cerrar sesión del usuario
     private fun cerrarSesion() {
         mAuth.signOut()
@@ -218,5 +204,20 @@ class PerfilFragment : Fragment() {
             .create()
             .show()
     }
+
+    // Mostrar un AlertDialog para confirmar el cierre de sesión
+    private fun mostrarDialogoCerrarSesion() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Cerrar Sesión")
+        builder.setMessage("¿Estás seguro de que quieres cerrar sesión?")
+        builder.setPositiveButton("Sí") { _, _ ->
+            cerrarSesion()
+        }
+        builder.setNegativeButton("No", null)
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
 
 }

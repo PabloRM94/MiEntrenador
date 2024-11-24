@@ -20,7 +20,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextObjetivo"
+            android:id="@+id/D_E_Text_Objetivo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,7 +39,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextDescripcion"
+            android:id="@+id/D_E_Text_Descripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -57,7 +57,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextMetros"
+            android:id="@+id/D_E_Text_Metros"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -81,7 +81,7 @@
                 android:orientation="horizontal">
 
                 <Switch
-                    android:id="@+id/switchDesarrollo"
+                    android:id="@+id/S_Desarrollo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -105,7 +105,7 @@
                 android:orientation="horizontal">
 
                 <Switch
-                    android:id="@+id/switchCorta"
+                    android:id="@+id/S_Corta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

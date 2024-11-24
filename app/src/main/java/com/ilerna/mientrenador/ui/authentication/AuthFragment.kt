@@ -18,12 +18,12 @@ import com.ilerna.mientrenador.ui.data.Usuario
 
 class AuthFragment : Fragment() {
 
-    private lateinit var emailEditText: EditText
-    private lateinit var ContrasenaEditText: EditText
-    private lateinit var verContrasena: ImageView
-    private lateinit var loginButton: Button
-    private lateinit var signupButton: Button
-    private lateinit var recuperarContrasenaTextView: TextView
+    private lateinit var E_Text_Mail: EditText
+    private lateinit var E_Text_Contra: EditText
+    private lateinit var Img_Ver_Contra: ImageView
+    private lateinit var Bttn_Acceder: Button
+    private lateinit var Bttn_Registro: Button
+    private lateinit var Text_RecuperarContrasena: TextView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var firestore: FirebaseFirestore
@@ -39,36 +39,39 @@ class AuthFragment : Fragment() {
         // Inicializar Firebase Auth, Firestore y Firebase Analytics
         mAuth = FirebaseAuth.getInstance()
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
-        firestore = FirebaseFirestore.getInstance() // Firestore para guardar datos
+        firestore = FirebaseFirestore.getInstance()
 
         // Vincular elementos del XML
-        emailEditText = view.findViewById(R.id.editTextTextEmailAddress)
-        ContrasenaEditText = view.findViewById(R.id.text_pass)
-        verContrasena = view.findViewById(R.id.verContraseña)
-        recuperarContrasenaTextView = view.findViewById(R.id.recuperarContrasena)
-        loginButton = view.findViewById(R.id.Accederbutton)
-        signupButton = view.findViewById(R.id.singupButton)
-        verContrasena.setOnClickListener {
-            if (ContrasenaVisible) {
-                // Ocultar contraseña
-                ContrasenaEditText.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            } else {
-                // Mostrar contraseña
-                ContrasenaEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            }
-            ContrasenaEditText.setSelection(ContrasenaEditText.text.length)
-            ContrasenaVisible = !ContrasenaVisible // Actualizar el estado de visibilidad
-        }
+        E_Text_Mail = view.findViewById(R.id.E_Text_Mail)
+        E_Text_Contra = view.findViewById(R.id.E_Text_Contra)
+        Img_Ver_Contra = view.findViewById(R.id.Img_Ver_Contra)
+        Text_RecuperarContrasena = view.findViewById(R.id.Text_RecuperarContrasena)
+        Bttn_Acceder = view.findViewById(R.id.Bttn_Acceder)
+        Bttn_Registro = view.findViewById(R.id.Bttn_Registro)
 
         // Manejar el botón de registro
-        signupButton.setOnClickListener { registrarUsuario() }
+        Bttn_Registro.setOnClickListener { registrarUsuario() }
 
         // Manejar el botón de login
-        loginButton.setOnClickListener { accederUsuario() }
+        Bttn_Acceder.setOnClickListener { accederUsuario() }
 
-        recuperarContrasenaTextView.setOnClickListener {
-            val email = emailEditText.text.toString().trim()
+        // Manejar el click en el ImageView para mostrar/ocultar la contraseña
+        Img_Ver_Contra.setOnClickListener {
+                    if (ContrasenaVisible) {
+                        // Ocultar contraseña
+                        E_Text_Contra.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    } else {
+                        // Mostrar contraseña
+                        E_Text_Contra.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    }
+                    E_Text_Contra.setSelection(E_Text_Contra.text.length)
+                    ContrasenaVisible = !ContrasenaVisible // Actualizar el estado de visibilidad
+                }
+
+        // Manejar el click en el TextView de recuperar contraseña
+        Text_RecuperarContrasena.setOnClickListener {
+            val email = E_Text_Mail.text.toString().trim()
             if (email.isEmpty()) {
                 Toast.makeText(requireContext(), "Por favor, introduce tu email para continuar", Toast.LENGTH_SHORT).show()
             } else {
@@ -98,15 +101,14 @@ class AuthFragment : Fragment() {
 
     // Función para registrar al usuario con correo y contraseña
     private fun registrarUsuario() {
-        val email = emailEditText.text.toString().trim()
-        val password = ContrasenaEditText.text.toString().trim()
-
+        val email = E_Text_Mail.text.toString().trim()
+        val password = E_Text_Contra.text.toString().trim()
         if (email.isEmpty()) {
-            emailEditText.error = "Por favor, introduce un email"
+            E_Text_Mail.error = "Por favor, introduce un email"
             return
         }
         if (password.isEmpty()) {
-            ContrasenaEditText.error = "Por favor, introduce una contraseña"
+            E_Text_Contra.error = "Por favor, introduce una contraseña"
             return
         }
 
@@ -128,7 +130,7 @@ class AuthFragment : Fragment() {
                     firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
 
                     // Mostrar formulario de perfil
-                    mostrarFormularioPerfil(user, password, false)  // false -> nuevo perfil
+                    mostrarFormularioPerfil(user, password)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -141,15 +143,15 @@ class AuthFragment : Fragment() {
 
     // Función para acceder al usuario con correo y contraseña
     private fun accederUsuario() {
-        val email = emailEditText.text.toString().trim()
-        val password = ContrasenaEditText.text.toString().trim()
+        val email = E_Text_Mail.text.toString().trim()
+        val password = E_Text_Contra.text.toString().trim()
 
         if (email.isEmpty()) {
-            emailEditText.error = "Por favor, introduce un email"
+            E_Text_Mail.error = "Por favor, introduce un email"
             return
         }
         if (password.isEmpty()) {
-            ContrasenaEditText.error = "Por favor, introduce una contraseña"
+            E_Text_Contra.error = "Por favor, introduce una contraseña"
             return
         }
 
@@ -183,20 +185,21 @@ class AuthFragment : Fragment() {
             }
     }
 
-    private fun mostrarFormularioPerfil(user: FirebaseUser?, contrasena: String, esEdicion: Boolean) {
+    // Función para mostrar el formulario de perfil
+    private fun mostrarFormularioPerfil(user: FirebaseUser?, contrasena: String) {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_completar_perfil, null)
         builder.setView(dialogView)
 
         // Vinculación de los campos del formulario
-        val nombreEditText: EditText = dialogView.findViewById(R.id.editTextNombre)
-        val apellidosEditText: EditText = dialogView.findViewById(R.id.editTextApellido)
-        val edadEditText: EditText = dialogView.findViewById(R.id.editTextEdad)
-        val clubEditText: EditText = dialogView.findViewById(R.id.editTextClub)
-        val anosNadandoEditText: EditText = dialogView.findViewById(R.id.editTextAnosNadando)
-        val estiloFavoritoEditText: EditText = dialogView.findViewById(R.id.editTextEstiloFavorito)
-        val pruebaFavoritaEditText: EditText = dialogView.findViewById(R.id.editTextPruebaFavorita)
+        val nombreEditText: EditText = dialogView.findViewById(R.id.E_Text_Nombre)
+        val apellidosEditText: EditText = dialogView.findViewById(R.id.E_text_Apellidos)
+        val edadEditText: EditText = dialogView.findViewById(R.id.E_Text_Edad)
+        val clubEditText: EditText = dialogView.findViewById(R.id.E_Text_Club)
+        val anosNadandoEditText: EditText = dialogView.findViewById(R.id.E_Text_A_Nadando)
+        val estiloFavoritoEditText: EditText = dialogView.findViewById(R.id.E_Text_Est_Fav)
+        val pruebaFavoritaEditText: EditText = dialogView.findViewById(R.id.E_Text_Prub_Fav)
         val contrasenaEditText: EditText = dialogView.findViewById(R.id.editTextContrasena)
         val mostrarContrasenaCheckBox: CheckBox = dialogView.findViewById(R.id.mostrarContrasenaCheckBox)
 
@@ -238,7 +241,6 @@ class AuthFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         }
-
         // Añadir TextWatcher a los campos obligatorios
         nombreEditText.addTextChangedListener(textWatcher)
         edadEditText.addTextChangedListener(textWatcher)
@@ -320,7 +322,7 @@ class AuthFragment : Fragment() {
             esValido = false
         }
 
-        // Validar años nadando (opcional, pero numérico si se introduce)
+        // Validar años nadando
         val anosNadando = anosNadandoEditText.text.toString().trim()
         if (anosNadando.isNotEmpty() && !anosNadando.matches("\\d+".toRegex())) {
             esValido = false

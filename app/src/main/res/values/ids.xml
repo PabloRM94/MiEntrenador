@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="guardarButton" type="id" />
-    <item name="cerrarSesionButton" type="id" />
+    <item name="Bttn_Guardar" type="id" />
+    <item name="Bttn_CerrarSesion" type="id" />
     <item name="buttonEliminarEntrenamiento" type="id" />
     <item name="textViewMetrosTotales" type="id" />
     <item name="textViewNumeroTareas" type="id" />
@@ -14,7 +14,7 @@
     <item name="buscarObjetivoEditText" type="id" />
     <item name="tabLayout" type="id" />
     <item name="textViewSumaTotalMetros" type="id" />
-    <item name="buttonGuardarEntrenamiento" type="id" />
+    <item name="Bttn_GuardarEntreno" type="id" />
     <item name="recyclerViewTareasEntrenamiento" type="id" />
     <item name="editTextNumeroEntrenamiento" type="id" />
     <item name="textViewSemana" type="id" />

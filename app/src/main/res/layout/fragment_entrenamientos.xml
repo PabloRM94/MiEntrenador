@@ -30,7 +30,7 @@
             app:srcCompat="@drawable/pabels_logo" />
 
         <Button
-            android:id="@+id/buttonEntrenamiento"
+            android:id="@+id/Bttn_Entrenamiento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_200"
@@ -38,7 +38,7 @@
             android:textColor="@color/black" />
 
         <LinearLayout
-            android:id="@+id/seccionCrearEntrenamiento"
+            android:id="@+id/LinLay_Crear"
             android:layout_width="368dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -74,7 +74,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/buttonAgregarTarea"
+                android:id="@+id/Bttn_AgregarTarea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/teal_700"
@@ -82,7 +82,7 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/buttonGuardarEntrenamiento"
+                android:id="@+id/Bttn_GuardarEntreno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/teal_700"
@@ -90,7 +90,7 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/buttonNuevoEntrenamiento"
+                android:id="@+id/Bttn_NuevoEntreno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/yellow_700"
@@ -100,7 +100,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/buttonConsulta"
+            android:id="@+id/Bttn_Consulta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_200"
@@ -108,7 +108,7 @@
             android:textColor="@color/black" />
 
         <LinearLayout
-            android:id="@+id/seccionVerEntrenamientos"
+            android:id="@+id/LinLay_Ver"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

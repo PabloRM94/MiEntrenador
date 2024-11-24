@@ -15,16 +15,19 @@ class EntrenamientosAdapter(
     private val onDeleteClick: (Entrenamiento) -> Unit
 ) : RecyclerView.Adapter<EntrenamientosAdapter.EntrenamientoViewHolder>() {
 
+    // Clase para el adaptador de Entrenamientos
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntrenamientoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_entrenamiento, parent, false)
         return EntrenamientoViewHolder(view)
     }
 
+    // Crear un nuevo ViewHolder
     override fun onBindViewHolder(holder: EntrenamientoViewHolder, position: Int) {
         val entrenamiento = entrenamientos[position]
         holder.bind(entrenamiento, onEditClick, onDeleteClick)
     }
 
+    // Obtener el número de elementos en la lista
     override fun getItemCount(): Int {
         return entrenamientos.size
     }
@@ -35,6 +38,7 @@ class EntrenamientosAdapter(
         notifyDataSetChanged()
     }
 
+    // Clase para el ViewHolder de Entrenamiento
     class EntrenamientoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nombreTextView: TextView = itemView.findViewById(R.id.textViewNombreEntrenamiento)
         private val numeroTareasTextView: TextView = itemView.findViewById(R.id.textViewNumeroTareas)

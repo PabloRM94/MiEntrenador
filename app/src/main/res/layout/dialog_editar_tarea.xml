@@ -8,7 +8,7 @@
 
     <!-- Etiqueta y campo para el objetivo -->
     <TextView
-        android:id="@+id/textViewObjetivo"
+        android:id="@+id/Text_Objetivo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Objetivo"
@@ -18,7 +18,7 @@
         android:layout_marginBottom="4dp" />
 
     <EditText
-        android:id="@+id/editTextObjetivo"
+        android:id="@+id/D_E_Text_Objetivo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Escribe el objetivo"
@@ -29,7 +29,7 @@
 
     <!-- Etiqueta y campo para la descripción -->
     <TextView
-        android:id="@+id/textViewDescripcion"
+        android:id="@+id/Text_Descripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Descripción"
@@ -39,7 +39,7 @@
         android:layout_marginBottom="4dp" />
 
     <EditText
-        android:id="@+id/editTextDescripcion"
+        android:id="@+id/D_E_Text_Descripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Escribe la descripción"
@@ -50,7 +50,7 @@
 
     <!-- Etiqueta y campo para los metros -->
     <TextView
-        android:id="@+id/textViewMetros"
+        android:id="@+id/Text_Metros"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Metros"
@@ -60,7 +60,7 @@
         android:layout_marginBottom="4dp" />
 
     <EditText
-        android:id="@+id/editTextMetros"
+        android:id="@+id/D_E_Text_Metros"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Ingresa los metros"

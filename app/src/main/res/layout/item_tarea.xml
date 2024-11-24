@@ -9,7 +9,7 @@
 
     <!-- Título -->
     <TextView
-        android:id="@+id/textViewEstilos"
+        android:id="@+id/Text_Estilos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -30,7 +30,7 @@
 
         <!-- Objetivo de la tarea -->
         <TextView
-            android:id="@+id/textViewObjetivo"
+            android:id="@+id/Text_Objetivo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
 
         <!-- Descripción de la tarea -->
         <TextView
-            android:id="@+id/textViewDescripcion"
+            android:id="@+id/Text_Descripcion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -56,7 +56,7 @@
 
         <!-- Metros de la tarea -->
         <TextView
-            android:id="@+id/textViewMetros"
+            android:id="@+id/Text_Metros"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -68,7 +68,7 @@
 
         <!-- Botón para Editar -->
         <ImageButton
-            android:id="@+id/buttonEditar"
+            android:id="@+id/Bttn_Editar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -78,7 +78,7 @@
 
         <!-- Botón para Eliminar -->
         <ImageButton
-            android:id="@+id/buttonEliminar"
+            android:id="@+id/Bttn_Eliminar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

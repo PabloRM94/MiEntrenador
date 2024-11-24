@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewTitulo"
+            android:id="@+id/NombreUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -69,7 +69,7 @@
             />
 
         <EditText
-            android:id="@+id/editTextTextEmailAddress"
+            android:id="@+id/E_Text_Mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ingresa tu email"
@@ -94,7 +94,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/text_pass"
+                android:id="@+id/E_Text_Contra"
                 android:layout_width="337dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -104,7 +104,7 @@
                 android:padding="10dp" />
 
             <ImageView
-                android:id="@+id/verContraseña"
+                android:id="@+id/Img_Ver_Contra"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
                 android:layout_gravity="end|center_vertical"
@@ -116,7 +116,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/recuperarContrasena"
+            android:id="@+id/Text_RecuperarContrasena"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Recuperar contraseña"
@@ -135,7 +135,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/Accederbutton"
+                android:id="@+id/Bttn_Acceder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/yellow_700"
@@ -143,7 +143,7 @@
                 android:text="ACCEDER"
                 android:textColor="@color/black" />
             <Button
-                android:id="@+id/singupButton"
+                android:id="@+id/Bttn_Registro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#E4D382"

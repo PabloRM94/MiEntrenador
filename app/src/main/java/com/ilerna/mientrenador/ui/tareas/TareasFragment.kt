@@ -1,5 +1,6 @@
 package com.ilerna.mientrenador.ui.tareas
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -18,7 +19,7 @@ class TareasFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var tareasList: RecyclerView
-    private lateinit var agregarTareaButton: Button
+    private lateinit var Bttn_AgregarTarea: Button
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var searchViewTareas: SearchView
     private var todasLasTareas: List<Tarea> = emptyList()
@@ -33,7 +34,7 @@ class TareasFragment : Fragment() {
 
         // Vincular elementos del layout
         tareasList = view.findViewById(R.id.recyclerViewTareas)
-        agregarTareaButton = view.findViewById(R.id.buttonAgregarTarea)
+        Bttn_AgregarTarea = view.findViewById(R.id.Bttn_AgregarTarea)
         searchViewTareas = view.findViewById(R.id.searchViewTareas)
 
         // Configurar RecyclerView
@@ -47,7 +48,7 @@ class TareasFragment : Fragment() {
 
         cargarTareas()
 
-        agregarTareaButton.setOnClickListener { mostrarDialogoAgregarTarea() }
+        Bttn_AgregarTarea.setOnClickListener { mostrarDialogoAgregarTarea() }
 
         searchViewTareas.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -68,7 +69,8 @@ class TareasFragment : Fragment() {
 
         return view
     }
-    fun mostrarDialogoAgregarTarea() {
+    @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
+    private fun mostrarDialogoAgregarTarea() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             Toast.makeText(requireContext(), "Debe iniciar sesión para agregar tareas", Toast.LENGTH_SHORT).show()
@@ -79,11 +81,11 @@ class TareasFragment : Fragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_agregar_tarea, null)
         builder.setView(dialogView)
 
-        val objetivoEditText = dialogView.findViewById<EditText>(R.id.editTextObjetivo)
-        val descripcionEditText = dialogView.findViewById<EditText>(R.id.editTextDescripcion)
-        val metrosEditText = dialogView.findViewById<EditText>(R.id.editTextMetros)
-        val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
-        val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
+        val objetivoEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Objetivo)
+        val descripcionEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Descripcion)
+        val metrosEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Metros)
+        val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.S_Desarrollo)
+        val cortaSwitch = dialogView.findViewById<Switch>(R.id.S_Corta)
         val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
         val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
         val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
@@ -124,7 +126,7 @@ class TareasFragment : Fragment() {
         dialog.show()
     }
 
-    fun agregarTarea(userId: String, tarea: Tarea) {
+    private fun agregarTarea(userId: String, tarea: Tarea) {
         val tareasCollection = firestore.collection("usuarios").document(userId).collection("tareasUsuario")
 
         tareasCollection.add(tarea)
@@ -137,7 +139,8 @@ class TareasFragment : Fragment() {
             }
     }
 
-    fun editarTarea(tarea: Tarea) {
+    @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
+    private fun editarTarea(tarea: Tarea) {
         val user = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             Toast.makeText(requireContext(), "Debe iniciar sesión para editar tareas", Toast.LENGTH_SHORT).show()
@@ -148,11 +151,11 @@ class TareasFragment : Fragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_agregar_tarea, null)
         builder.setView(dialogView)
 
-        val objetivoEditText = dialogView.findViewById<EditText>(R.id.editTextObjetivo)
-        val descripcionEditText = dialogView.findViewById<EditText>(R.id.editTextDescripcion)
-        val metrosEditText = dialogView.findViewById<EditText>(R.id.editTextMetros)
-        val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.switchDesarrollo)
-        val cortaSwitch = dialogView.findViewById<Switch>(R.id.switchCorta)
+        val objetivoEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Objetivo)
+        val descripcionEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Descripcion)
+        val metrosEditText = dialogView.findViewById<EditText>(R.id.D_E_Text_Metros)
+        val desarrolloSwitch = dialogView.findViewById<Switch>(R.id.S_Desarrollo)
+        val cortaSwitch = dialogView.findViewById<Switch>(R.id.S_Corta)
         val checkboxCrol = dialogView.findViewById<CheckBox>(R.id.checkboxCrol)
         val checkboxEspalda = dialogView.findViewById<CheckBox>(R.id.checkboxEspalda)
         val checkboxBraza = dialogView.findViewById<CheckBox>(R.id.checkboxBraza)
@@ -229,7 +232,7 @@ class TareasFragment : Fragment() {
             }
     }
 
-    fun eliminarTarea(tarea: Tarea) {
+    private fun eliminarTarea(tarea: Tarea) {
         val user = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             Toast.makeText(requireContext(), "Debe iniciar sesión para eliminar tareas", Toast.LENGTH_SHORT).show()

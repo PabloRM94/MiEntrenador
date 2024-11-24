@@ -1,4 +1,3 @@
-// TareasUtils.kt
 package com.ilerna.mientrenador.utils
 
 import com.ilerna.mientrenador.ui.data.Tarea

@@ -17,7 +17,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <TextView
-                android:id="@+id/textViewTitulo"
+                android:id="@+id/NombreUsuario"
                 android:layout_width="277dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -54,7 +54,7 @@
                 android:gravity="center"/>
 
             <EditText
-                android:id="@+id/editTextNombre"
+                android:id="@+id/E_Text_Nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingresa tu nombre"
@@ -80,7 +80,7 @@
                 android:gravity="center"/>
 
             <EditText
-                android:id="@+id/editTextApellido"
+                android:id="@+id/E_text_Apellidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingresa tus Apellidos"
@@ -117,7 +117,7 @@
                     android:gravity="center"/>
 
                 <EditText
-                    android:id="@+id/editTextEdad"
+                    android:id="@+id/E_Text_Edad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Ingresa tu edad"
@@ -171,7 +171,7 @@
                     android:gravity="center"/>
 
                 <EditText
-                    android:id="@+id/editTextClub"
+                    android:id="@+id/E_Text_Club"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Ingresa el club"
@@ -200,7 +200,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/editTextAnosNadando"
+                    android:id="@+id/E_Text_A_Nadando"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Años nadando"
@@ -229,7 +229,7 @@
                     android:gravity="center"/>
 
                 <EditText
-                    android:id="@+id/editTextEstiloFavorito"
+                    android:id="@+id/E_Text_Est_Fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Estilo favorito"
@@ -256,7 +256,7 @@
                     android:gravity="center"/>
 
                 <EditText
-                    android:id="@+id/editTextPruebaFavorita"
+                    android:id="@+id/E_Text_Prub_Fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Prueba favorita"
